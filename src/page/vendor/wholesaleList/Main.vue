@@ -14,16 +14,30 @@
                         </div>
                     </v-col>
                     <v-col cols="10">
-                        <v-data-table
+                        <data-table-custom-component
+                            class="th-center"
+                            dense
+                            itemsPerPageHide
+                            countHide
                             :headers="dataTable.headers"
-                            :items="dataTable.item"
-                            hide-default-footer
-                            class="elevation-1"
-                        ></v-data-table>
+                            :items="dataTable.items"
+                            :totalRows="dataTable.totalRows"
+                            :loading="dataTable.loading"
+                            :page="dataTable.page"
+                            :search="dataTable.search"
+                            :items-per-page="dataTable.itemsPerPage"
+                            :cell="dataTable.cell"
+                            :sort-by="dataTable.sortBy"
+                            :sort-desc="dataTable.sortDesc"
+                            multi-sort
+                            content-class="tableline equipment-table td50"
+                            @click:multiButton="clickMultiButton($event)"
+                        >
+                        </data-table-custom-component>
                     </v-col>
                     <v-col cols="10">
                         <div style="width:100%; display:flex; justify-content: end;">
-                            <v-btn>
+                            <v-btn @click="dialogChange()">
                                 + 새 거래처 등록
                             </v-btn>
                         </div>
@@ -40,13 +54,16 @@
     </v-card>
 </template>
 <script>
+import Vue from 'vue';
 // import axios from 'axios';
 import newAccount from '../../../components/newAccount.vue';
 import OrderModify from '../../../components/orderModify.vue';
-export default{
-  components: { newAccount, OrderModify },
+import DataTableCustom from '@/components/DataTableCustom.vue';
+export default Vue.extend({
+  components: { newAccount, OrderModify},
 	data(){
 		return {
+            DataTableCustom,
 			dataentry:{
 				name:"",
 				department:"",
@@ -69,12 +86,31 @@ export default{
                         text: '매장 유선번호', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '주문하기', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주문하기', value: 'order', align: 'center', cellClass: 'w-10 text-center', type: 'multiButton',
                     },
 				],
-				item: [
-                    { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'}
+				items: [
+                    { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'},
+                    { id: 2, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'},
+                    { id: 3, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'},
                 ],
+                page: 1,
+                itemsPerPage: 10,
+                totalRows: 10,
+                cell: {
+                    multiButton: {
+                        order: {
+                            buttonList: [
+                                {
+                                    color: 'view',
+                                    style: this.$vuetify.theme.dark ? 'color: #000;' : 'color: #000;',
+                                    contentClass: 'elevation-1 btn-black',
+                                    title: '주문하기',
+                                },
+                            ]
+                        },
+                    },
+                },
 			},
             dialog: {
                 accountValue: false,
@@ -83,13 +119,20 @@ export default{
 		};
 	},
 	methods: {
-        // dialogChange() {
-        //     this.dialog.accountValue = true;
-        // },
-        // order(data) {
-        //     this.dialog.orderValue = true;
-        //     console.log(data);
-        // },
+        dialogChange() {
+            this.dialog.accountValue = true;
+        },
+        order(data) {
+            this.dialog.orderValue = true;
+            console.log(data);
+        },
+        clickMultiButton(data) {
+            console.log(data);
+            if(data.header == 'order') {
+                console.log(data);
+                this.dialog.orderValue = true; 
+            }
+        }
 		// submit() {
 		// 	const path = 'http://127.0.0.1:5000/dataentry'
 		// 	const data = axios.post(path, {
@@ -107,7 +150,7 @@ export default{
 	},
 	mounted() {
 	}
-}
+})
 </script>
 
 <style>

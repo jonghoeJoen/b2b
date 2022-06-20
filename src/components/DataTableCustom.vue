@@ -800,6 +800,12 @@ export default Vue.component('data-table-custom-component', {
         };
     },
     watch: {
+        headers: {
+            handler(n) {
+                console.log(n);
+            },
+            deep:true,
+        },
         dataProps: {
             handler(n) {
                 this.$nextTick(() => {

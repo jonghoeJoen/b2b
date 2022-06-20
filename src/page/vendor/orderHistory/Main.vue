@@ -62,9 +62,33 @@ export default{
                         text: '매장 유선번호', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '주문하기', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주문하기', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center', type: 'multiButton',
                     },
 				],
+                cell: {
+                    multiButton: {
+                        order: {
+                            buttonList: [
+                                {
+                                    color: 'view',
+                                    style: this.$vuetify.theme.dark ? 'color: #000;' : 'color: #000;',
+                                    contentClass: 'elevation-1 btn-black',
+                                    title: '주문하기',
+                                },
+                            ]
+                        },
+                    },
+                    textField: {
+                        set: {
+
+                        },
+                    },
+                    radio: {
+                        use: {
+
+                        },
+                    },
+                },
 				item: [
                     { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'}
                 ],
