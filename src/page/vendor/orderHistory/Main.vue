@@ -21,17 +21,27 @@
                             class="elevation-1"
                         ></v-data-table>
                     </v-col>
+                    <v-col cols="10">
+                        <data-table-custom-component
+                            :headers="dataTable.headers"
+                            :items="dataTable.item"
+                            hide-default-footer
+                            class="elevation-1"
+                        ></data-table-custom-component>
+                    </v-col>
                 </v-row>
             </v-col>
         </v-row>
     </v-card>
 </template>
 <script>
+import DataTableCustom from '@/components/DataTableCustom.vue';
 export default{
 	data(){
 		return {
+            DataTableCustom,		
 			dataentry:{
-				name:"",
+                name:"",
 				department:"",
 			},
             dataTable: {
