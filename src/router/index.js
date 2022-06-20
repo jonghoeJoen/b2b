@@ -19,6 +19,10 @@ const routes = [
                 path:'/orderHistory',
                 component: () => import('../page/vendor/orderHistory/Main.vue'),
             },
+            {
+                path:'/orderNow',
+                component: () => import('../page/wholesaler/orderNow/Main.vue'),
+            },
         ]
         
     },

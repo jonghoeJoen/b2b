@@ -98,6 +98,11 @@ export default Vue.extend({
 					text: '주문 내역',
 					href: '/orderHistory'
 				},
+				{
+					icon: 'mdi-star',
+					text: '주문 현황',
+					href: '/orderNow'
+				},
 			],
         };
     },
