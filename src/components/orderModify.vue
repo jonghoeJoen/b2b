@@ -2,7 +2,7 @@
     <v-dialog
         scrollable
         persistent
-        width="600px"
+        width="800px"
         v-model="valueData"
         @click:outside="closeModal()"
         @keydown.esc="closeModal()">
@@ -26,13 +26,26 @@
                         <v-col cols="9" class="d-flex justify-center pa-4">
                         </v-col>
                         <v-col cols="12">
-                            <!-- <b-table striped hover :items="dataTable.item" :fields="dataTable.fields">
-                                <template #cell(order)="row">
-                                    <b-button size="sm" @click="dialogChange(row.item)" class="mr-2">
-                                    선택
-                                    </b-button>
-                                </template>
-                            </b-table> -->
+                            <data-table-custom-component
+                                class="th-center"
+                                dense
+                                itemsPerPageHide
+                                countHide
+                                :headers="dataTable.headers"
+                                :items="dataTable.items"
+                                :totalRows="dataTable.totalRows"
+                                :loading="dataTable.loading"
+                                :page="dataTable.page"
+                                :search="dataTable.search"
+                                :items-per-page="dataTable.itemsPerPage"
+                                :cell="dataTable.cell"
+                                :sort-by="dataTable.sortBy"
+                                :sort-desc="dataTable.sortDesc"
+                                multi-sort
+                                content-class="tableline equipment-table td50"
+                                @click:multiButton="clickMultiButton($event)"
+                            >
+                            </data-table-custom-component>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -85,7 +98,10 @@ export default Vue.component('order-modify', {
                         text: '주문하기', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
                     },
 				],
-				item: [
+                page: 1,
+                itemsPerPage: 10,
+                totalRows: 10,
+				items: [
                     { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'}
                 ],
 			},
