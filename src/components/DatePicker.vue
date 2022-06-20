@@ -85,11 +85,7 @@ export default Vue.component('picker-date-picker-component', {
         },
         dayFormat: {
             type: Function,
-<<<<<<< HEAD
             default(value ) {
-=======
-            default(value) {
->>>>>>> 36c0ef25910bb7cf794134a2e53a2d27933e76a5
                 return moment(value, 'YYYY-MM-DD').format('D');
             },
         },

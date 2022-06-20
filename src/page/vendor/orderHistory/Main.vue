@@ -60,7 +60,6 @@
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import DatePicker from '@/components/DatePicker.vue';
 export default{
-  components: { DatePicker },
 	data(){
 		return {
             DataTableCustom,
