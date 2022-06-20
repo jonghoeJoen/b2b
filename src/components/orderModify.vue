@@ -2,39 +2,48 @@
     <v-dialog
         scrollable
         persistent
-        width="600px"
+        width="800px"
         v-model="valueData"
         @click:outside="closeModal()"
         @keydown.esc="closeModal()">
         <v-card class="pa-3">
             <v-row dense class="d-flex justify-center">
-                <v-col cols="10">
-                    <v-row>
-                        <v-col cols="12">
-                            <div class="d-block text-center">
-                                <h3>상품 주문</h3>
-                            </div>
-                        </v-col>
-                        <v-col cols="3" class="d-flex justify-start pa-4">
-                            주문 매장
-                        </v-col>
-                        <v-col cols="9" class="d-flex justify-center pa-4">
-                        </v-col>
-                        <v-col cols="3" class="d-flex justify-start pa-4">
-                            매장 주소
-                        </v-col>
-                        <v-col cols="9" class="d-flex justify-center pa-4">
-                        </v-col>
-                        <v-col cols="12">
-                            <!-- <b-table striped hover :items="dataTable.item" :fields="dataTable.fields">
-                                <template #cell(order)="row">
-                                    <b-button size="sm" @click="dialogChange(row.item)" class="mr-2">
-                                    선택
-                                    </b-button>
-                                </template>
-                            </b-table> -->
-                        </v-col>
-                    </v-row>
+                <v-col cols="12">
+                <div class="d-block text-center">
+                    <h3>상품 주문</h3>
+                </div>
+                </v-col>
+                <v-col cols="3" class="d-flex justify-start pa-4">
+                    주문 매장
+                </v-col>
+                <v-col cols="9" class="d-flex justify-center pa-4">
+                </v-col>
+                <v-col cols="3" class="d-flex justify-start pa-4">
+                    매장 주소
+                </v-col>
+                <v-col cols="9" class="d-flex justify-center pa-4">
+                </v-col>
+                <v-col cols="12">
+                    <data-table-custom-component
+                        class="th-center"
+                        dense
+                        itemsPerPageHide
+                        countHide
+                        :headers="dataTable.headers"
+                        :items="dataTable.items"
+                        :totalRows="dataTable.totalRows"
+                        :loading="dataTable.loading"
+                        :page="dataTable.page"
+                        :search="dataTable.search"
+                        :items-per-page="dataTable.itemsPerPage"
+                        :cell="dataTable.cell"
+                        :sort-by="dataTable.sortBy"
+                        :sort-desc="dataTable.sortDesc"
+                        multi-sort
+                        content-class="tableline equipment-table td50"
+                        @click:multiButton="clickMultiButton($event)"
+                    >
+                    </data-table-custom-component>
                 </v-col>
                 <v-col cols="10">
                     <div class="d-flex justify-end">
@@ -85,9 +94,12 @@ export default Vue.component('order-modify', {
                         text: '주문하기', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
                     },
 				],
-				item: [
+				items: [
                     { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'}
                 ],
+                page: 1,
+                itemsPerPage: 10,
+                totalRows: 10,
 			},
         };
     },

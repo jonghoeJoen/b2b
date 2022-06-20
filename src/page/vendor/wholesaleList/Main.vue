@@ -7,6 +7,8 @@
                         <div class="sign-up-subtitle">도매처 리스트</div>
                         <div class="d-flex justify-center align-center">
                                 <v-text-field
+                                    dense
+                                    outlined
                                     class="pa-0"
                                     hide-details="auto"    
                                 ></v-text-field>

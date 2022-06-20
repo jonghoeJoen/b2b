@@ -5,28 +5,53 @@
                 <v-row class="d-flex justify-center">
                     <v-col cols="10" class="d-flex justify-space-between">
                         <div class="sign-up-subtitle">주문내역 리스트</div>
-                        <div class="d-flex justify-center align-center">
+                        <div class="d-flex justify-space-between">
+                            <div class="d-flex justify-center align-center">
+                                <date-picker
+                                    prepend-inner-icon="mdi-calendar"
+                                    dense
+                                    outlined
+                                    hide-details>
+                                </date-picker>
+                                ~
+                                <date-picker
+                                    prepend-inner-icon="mdi-calendar"
+                                    dense
+                                    outlined
+                                    hide-details>
+                                </date-picker>
+                            </div>
+                            &nbsp;
+                            <div class="d-flex justify-center align-center">
                                 <v-text-field
+                                    dense
+                                    outlined
                                     class="pa-0"
                                     hide-details="auto"    
                                 ></v-text-field>
                                 <v-btn>검색</v-btn>
+                            </div>
                         </div>
                     </v-col>
                     <v-col cols="10">
-                        <v-data-table
-                            :headers="dataTable.headers"
-                            :items="dataTable.item"
-                            hide-default-footer
-                            class="elevation-1"
-                        ></v-data-table>
-                    </v-col>
-                    <v-col cols="10">
                         <data-table-custom-component
+                            class="th-center"
+                            dense
+                            itemsPerPageHide
+                            countHide
                             :headers="dataTable.headers"
-                            :items="dataTable.item"
-                            hide-default-footer
-                            class="elevation-1"
+                            :items="dataTable.items"
+                            :totalRows="dataTable.totalRows"
+                            :loading="dataTable.loading"
+                            :page="dataTable.page"
+                            :search="dataTable.search"
+                            :items-per-page="dataTable.itemsPerPage"
+                            :cell="dataTable.cell"
+                            :sort-by="dataTable.sortBy"
+                            :sort-desc="dataTable.sortDesc"
+                            multi-sort
+                            content-class="tableline equipment-table td50"
+                            @click:multiButton="clickMultiButton($event)"
                         ></data-table-custom-component>
                     </v-col>
                 </v-row>
@@ -36,7 +61,9 @@
 </template>
 <script>
 import DataTableCustom from '@/components/DataTableCustom.vue';
+import DatePicker from '@/components/DatePicker.vue';
 export default{
+  components: { DatePicker },
 	data(){
 		return {
             DataTableCustom,		
@@ -62,9 +89,12 @@ export default{
                         text: '매장 유선번호', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '주문하기', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center', type: 'multiButton',
+                        text: '주문하기', sortable: true, value: 'order', align: 'center', cellClass: 'w-10 text-center', type: 'multiButton',
                     },
 				],
+                page: 1,
+                itemsPerPage: 10,
+                totalRows: 10,
                 cell: {
                     multiButton: {
                         order: {
@@ -78,18 +108,8 @@ export default{
                             ]
                         },
                     },
-                    textField: {
-                        set: {
-
-                        },
-                    },
-                    radio: {
-                        use: {
-
-                        },
-                    },
                 },
-				item: [
+				items: [
                     { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'}
                 ],
 			},
