@@ -6,7 +6,7 @@
         v-model="valueData"
         @click:outside="closeModal()"
         @keydown.esc="closeModal()">
-        <v-card class="pa-3">
+        <v-card class="pa-5">
         <v-row dense class="d-flex justify-center">
             <v-col cols="10">
                 <v-row>
@@ -15,13 +15,16 @@
                             <h3>도매처 등록</h3>
                         </div>
                     </div>
-                    <v-col cols="3">
+                    <v-col cols="3" class="d-flex justify-center align-center">
                         매장명
                     </v-col>
-                    <v-col cols="9" class="d-flex justify-center">
+                    <v-col cols="9" class="d-flex justify-center align-center">
                         <v-text-field 
+                            dense
+                            outlined
                             type="text" 
                             class="form-control" 
+                            hide-details="auto"
                             placeholder="영문 소문자 또는 영문+숫자 조합 4~30자리">
                         </v-text-field>
                         <v-btn> 검색 </v-btn>
