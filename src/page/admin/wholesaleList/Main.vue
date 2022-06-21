@@ -21,7 +21,6 @@
                         <data-table-custom-component
                             class="th-center"
                             dense
-                            itemsPerPageHide
                             countHide
                             :headers="dataTable.headers"
                             :items="dataTable.items"
@@ -31,8 +30,6 @@
                             :search="dataTable.search"
                             :items-per-page="dataTable.itemsPerPage"
                             :cell="dataTable.cell"
-                            :sort-by="dataTable.sortBy"
-                            :sort-desc="dataTable.sortDesc"
                             multi-sort
                             content-class="tableline equipment-table td50"
                             @click:multiButton="clickMultiButton($event)"
@@ -79,29 +76,26 @@ export default Vue.extend({
                         text: '번호', sortable: true, value: 'id', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장명', sortable: true, value: 'storeName', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장명', sortable: true, value: 'store_name', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장 휴대전화', sortable: true, value: 'phone1', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장 휴대전화', sortable: true, value: 'phone_no', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장 유선번호', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장 유선번호', sortable: true, value: 'mobile_no', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '주문하기', value: 'order', align: 'center', cellClass: 'w-10 text-center', type: 'multiButton',
                     },
 				],
-				items: [
-                    { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'},
-                    { id: 2, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'},
-                    { id: 3, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'},
-                ],
+				items: [],
+                loading: false,
                 page: 1,
                 itemsPerPage: 10,
-                totalRows: 10,
+                totalRows: 0,
                 cell: {
                     multiButton: {
                         order: {
@@ -119,7 +113,8 @@ export default Vue.extend({
             dialog: {
                 accountValue: false,
                 orderValue: false,
-            }
+            },
+            item: [],
 		};
 	},
 	methods: {
@@ -137,20 +132,25 @@ export default Vue.extend({
                 this.dialog.orderValue = true; 
             }
         },
-		submit() {
-			const path = 'http://127.0.0.1:5000/store'
-			const data = axios.post(path, {
-				name:this.dataentry.name,
-				department:this.dataentry.department,
-			}
-		    )
-            data.then(response => {
-                console.log(response);
-                this.items = response;
+		async submit() {
+            this.dataTable.loading = true;
+            const path = 'http://127.0.0.1:5000/dash'
+            const test = 'admin'
+            const data = axios.post(path, {
+                name:test,
+                department:this.dataentry.department,
+                }
+            )      
+            data.then((response) => {
+                this.item.push(response.data.data);
+                this.dataTable.items = this.item[0];
+                this.dataTable.totalRows = this.dataTable.items.length;
+                console.log(this.dataTable)
             })
             .catch(err =>{
-                console.log(err);
+                console.log('err: ' + err);
             });
+            this.dataTable.loading = false;
 		},
 	},
 	mounted() {
