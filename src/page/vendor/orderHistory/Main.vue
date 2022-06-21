@@ -28,7 +28,7 @@
                                 class="pa-0"
                                 hide-details="auto"    
                             ></v-text-field>
-                            <v-btn>검색</v-btn>
+                            <v-btn @click="checkItem()">검색</v-btn>
                         </div>
                     </v-col>
                     <v-col cols="10">
@@ -57,7 +57,7 @@
     </v-card>
 </template>
 <script>
-import axios from 'axios';
+// import axios from 'axios';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import DatePicker from '@/components/DatePicker.vue';
 export default{
@@ -75,7 +75,7 @@ export default{
                         text: '주문일자', sortable: true, value: 'id', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장명', sortable: true, value: 'storeName', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장명', sortable: true, value: 'store_name', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'w-10 text-center',
@@ -108,39 +108,12 @@ export default{
 		};
 	},
 	methods: {
-		// submit() {
-		// 	const path = 'http://127.0.0.1:5000/dataentry'
-		// 	const data = axios.post(path, {
-		// 		name:this.dataentry.name,
-		// 		department:this.dataentry.department,
-		// 	}
-		// )
-		// data.then(response => {
-		// 	console.log(response);
-		// 	this.items = response;
-		// })
-		// .catch(err =>{
-		// 	console.log(err);
-		// });
-		// },
+        checkItem() {
+            console.log(this.item);
+            console.log(this.dataTable.items);
+        }
 	},
 	mounted() {
-		const path = 'http://127.0.0.1:5000/dataentry'
-		const test = 'admin'
-		const data = axios.post(path, {
-			name:test,
-			department:this.dataentry.department,
-			}
-		)      
-		data.then((response) => {
-			console.log(response.data.data);
-			console.log(response);
-			this.item.push(response.data.data);
-			console.log(this.item)
-		})
-		.catch(err =>{
-			console.log('err: ' + err);
-		});
 	}
 }
 </script>

@@ -128,28 +128,4 @@ export default{
 </script>
 
 <style>
-.sign-up-title {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 50px;
-    line-height: 61px;
-}
-
-.sign-up-subtitle {
-    font-family: 'Work Sans';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 23px;
-    letter-spacing: -0.02em;
-}
-
-.sign-up-menu {
-    font-family: 'Noto Sans KR';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 29px;
-}
 </style>

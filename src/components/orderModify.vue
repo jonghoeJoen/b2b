@@ -11,7 +11,7 @@
             <v-row dense class="d-flex justify-center">
                 <v-col cols="12">
                     <div class="d-block text-center">
-                        <h3>상품 주문</h3>
+                        <h3 class="test">상품 주문</h3>
                     </div>
                 </v-col>
                 <v-col cols="2" class="d-flex justify-center align-center pa-4">

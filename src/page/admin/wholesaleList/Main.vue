@@ -57,7 +57,7 @@
 </template>
 <script>
 import Vue from 'vue';
-// import axios from 'axios';
+import axios from 'axios';
 import newAccount from '../../../components/newAccount.vue';
 import OrderModify from '../../../components/orderModify.vue';
 import DataTableCustom from '@/components/DataTableCustom.vue';
@@ -134,23 +134,25 @@ export default Vue.extend({
                 console.log(data);
                 this.dialog.orderValue = true; 
             }
-        }
-		// submit() {
-		// 	const path = 'http://127.0.0.1:5000/dataentry'
-		// 	const data = axios.post(path, {
-		// 		name:this.dataentry.name,
-		// 		department:this.dataentry.department,
-		// 	}
-		// )
-		// data.then(response => {
-		// 	this.items = response;
-		// })
-		// .catch(err =>{
-		// 	console.log(err);
-		// });
-		// },
+        },
+		submit() {
+			const path = 'http://127.0.0.1:5000/store'
+			const data = axios.post(path, {
+				name:this.dataentry.name,
+				department:this.dataentry.department,
+			}
+		    )
+            data.then(response => {
+                console.log(response);
+                this.items = response;
+            })
+            .catch(err =>{
+                console.log(err);
+            });
+		},
 	},
 	mounted() {
+        this.submit();
 	}
 })
 </script>

@@ -48,3 +48,6 @@ export default {
   }),
 };
 </script>
+<style scoped>
+  @import url('/src/assets/css/meta.css');
+</style>
