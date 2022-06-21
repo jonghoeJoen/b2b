@@ -6,13 +6,15 @@
                     <v-col cols="10" class="d-flex justify-space-between">
                         <div class="sign-up-subtitle">admin 도매처 리스트</div>
                         <div class="d-flex justify-center align-center">
-                                <v-text-field
-                                    dense
-                                    outlined
-                                    class="pa-0"
-                                    hide-details="auto"    
-                                ></v-text-field>
-                                <v-btn>검색</v-btn>
+                            <v-text-field
+                                dense
+                                outlined
+                                class="pa-0"
+                                hide-details="auto"   
+                            ></v-text-field>
+                            <v-btn
+                                class="pa-0 btn-black"
+                            >검색</v-btn>
                         </div>
                     </v-col>
                     <v-col cols="10">
@@ -39,7 +41,8 @@
                     </v-col>
                     <v-col cols="10">
                         <div style="width:100%; display:flex; justify-content: end;">
-                            <v-btn @click="dialogChange()">
+                            <v-btn 
+                                @click="dialogChange()">
                                 + 새 거래처 등록
                             </v-btn>
                         </div>
@@ -105,8 +108,7 @@ export default Vue.extend({
                             buttonList: [
                                 {
                                     color: 'view',
-                                    style: this.$vuetify.theme.dark ? 'color: #000;' : 'color: #000;',
-                                    contentClass: 'elevation-1 btn-black',
+                                    contentClass: 'elevation-1 btn-order',
                                     title: '주문하기',
                                 },
                             ]

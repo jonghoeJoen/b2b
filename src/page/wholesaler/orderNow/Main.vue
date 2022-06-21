@@ -12,6 +12,7 @@
                                 dense
                                 outlined
                                 hide-details
+                                v-model="startTime"
                             >
                             </picker-date-picker-component>
                             ~
@@ -20,15 +21,18 @@
                                 dense
                                 outlined
                                 hide-details
+                                v-model="endTime"
                             >
                             </picker-date-picker-component>
                             <v-text-field
                                 dense
                                 outlined
                                 class="pa-0"
-                                hide-details="auto"    
+                                hide-details="auto"   
                             ></v-text-field>
-                            <v-btn>검색</v-btn>
+                            <v-btn
+                                class="pa-0 btn-black"
+                            >검색</v-btn>
                         </div>
                     </v-col>
                     <v-col cols="10">
@@ -103,6 +107,8 @@ export default{
                 ],
 			},
             value: null,
+            startTime: null,
+            endTime: null
 		};
 	},
 	methods: {

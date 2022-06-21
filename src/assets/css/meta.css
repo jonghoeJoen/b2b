@@ -26,3 +26,13 @@
     font-size: 20px;
     line-height: 29px;
 }
+
+.btn-black {
+    background-color: #141414 !important;
+    color: #FFFFFF !important;
+}
+
+.btn-order {
+    background-color: #4052F9 !important;
+    color: #FFFFFF !important;
+}
