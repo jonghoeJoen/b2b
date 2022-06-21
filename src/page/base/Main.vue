@@ -25,6 +25,25 @@
                     </v-list-item-content>
                     </v-list-item>
                 </v-list-item-group>
+					<v-list-group
+    					:value="true"
+        				prepend-icon="mdi-account-circle">
+						<template v-slot:activator>
+							<v-list-item-title>관리자페이지</v-list-item-title>
+						</template>
+						<v-list-item
+						v-for="(item, i) in admins"
+						:key="i"
+						:href="item.href"
+						>
+						<v-list-item-icon>
+							<v-icon v-text="item.icon"></v-icon>
+						</v-list-item-icon>
+						<v-list-item-content>
+							<v-list-item-title v-text="item.text"></v-list-item-title>
+						</v-list-item-content>
+						</v-list-item>
+					</v-list-group>
 			</v-list>
 		</v-navigation-drawer>
 		<v-app-bar app dense elevation="1">
@@ -98,7 +117,24 @@ export default Vue.extend({
 					text: '주문 내역',
 					href: '/orderHistory'
 				},
+				{
+					icon: 'mdi-star',
+					text: '주문 현황',
+					href: '/orderNow'
+				},
 			],
+			admins: [
+				{
+					icon: 'mdi-inbox',
+					text: '판매처 리스트',
+					href: 'admin-wholesaler'
+				},
+				{
+					icon: 'mdi-star',
+					text: '주문 내역',
+					href: 'admin-orderHistory'
+				},
+      		],
         };
     },
     watch: {

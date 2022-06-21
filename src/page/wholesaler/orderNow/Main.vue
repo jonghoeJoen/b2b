@@ -4,7 +4,7 @@
             <v-col class="col-12">
                 <v-row class="d-flex justify-center">
                     <v-col cols="10" class="d-flex justify-space-between">
-                        <div class="sign-up-subtitle">주문내역 리스트</div>
+                        <div class="sign-up-subtitle">주문 현황</div>
                         <div class="d-flex justify-center align-center">
                             조회 기간
                             <picker-date-picker-component
@@ -57,7 +57,6 @@
     </v-card>
 </template>
 <script>
-import axios from 'axios';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import DatePicker from '@/components/DatePicker.vue';
 export default{
@@ -104,7 +103,6 @@ export default{
                 ],
 			},
             value: null,
-            item: [],
 		};
 	},
 	methods: {
@@ -125,22 +123,6 @@ export default{
 		// },
 	},
 	mounted() {
-		const path = 'http://127.0.0.1:5000/dataentry'
-		const test = 'admin'
-		const data = axios.post(path, {
-			name:test,
-			department:this.dataentry.department,
-			}
-		)      
-		data.then((response) => {
-			console.log(response.data.data);
-			console.log(response);
-			this.item.push(response.data.data);
-			console.log(this.item)
-		})
-		.catch(err =>{
-			console.log('err: ' + err);
-		});
 	}
 }
 </script>
