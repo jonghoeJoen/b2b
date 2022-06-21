@@ -24,8 +24,7 @@
                             outlined
                             type="text" 
                             class="form-control" 
-                            hide-details="auto"
-                            placeholder="영문 소문자 또는 영문+숫자 조합 4~30자리">
+                            hide-details="auto">
                         </v-text-field>
                         <v-btn> 검색 </v-btn>
                     </v-col>
