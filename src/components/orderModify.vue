@@ -2,57 +2,101 @@
     <v-dialog
         scrollable
         persistent
-        width="800px"
+        width="1400px"
         v-model="valueData"
+        style="overflow-y: scroll"
         @click:outside="closeModal()"
         @keydown.esc="closeModal()">
-        <v-card class="pa-3">
+        <v-card class="pa-3" style="overflow-y: scroll">
             <v-row dense class="d-flex justify-center">
-                <v-col cols="10">
-                    <v-row>
-                        <v-col cols="12">
-                            <div class="d-block text-center">
-                                <h3>상품 주문</h3>
-                            </div>
-                        </v-col>
-                        <v-col cols="3" class="d-flex justify-start pa-4">
-                            주문 매장
-                        </v-col>
-                        <v-col cols="9" class="d-flex justify-center pa-4">
-                        </v-col>
-                        <v-col cols="3" class="d-flex justify-start pa-4">
-                            매장 주소
-                        </v-col>
-                        <v-col cols="9" class="d-flex justify-center pa-4">
-                        </v-col>
-                        <v-col cols="12">
-                            <data-table-custom-component
-                                class="th-center"
-                                dense
-                                itemsPerPageHide
-                                countHide
-                                :headers="dataTable.headers"
-                                :items="dataTable.items"
-                                :totalRows="dataTable.totalRows"
-                                :loading="dataTable.loading"
-                                :page="dataTable.page"
-                                :search="dataTable.search"
-                                :items-per-page="dataTable.itemsPerPage"
-                                :cell="dataTable.cell"
-                                :sort-by="dataTable.sortBy"
-                                :sort-desc="dataTable.sortDesc"
-                                multi-sort
-                                content-class="tableline equipment-table td50"
-                                @click:multiButton="clickMultiButton($event)"
-                            >
-                            </data-table-custom-component>
-                        </v-col>
-                    </v-row>
+                <v-col cols="12">
+                    <div class="d-block text-center">
+                        <h3>상품 주문</h3>
+                    </div>
+                </v-col>
+                <v-col cols="2" class="d-flex justify-center align-center pa-4">
+                    주문 매장
+                </v-col>
+                <v-col cols="10" class="d-flex justify-center align-center pa-4">
+                </v-col>
+                <v-col cols="2" class="d-flex justify-center align-center pa-4">
+                    매장 주소
+                </v-col>
+                <v-col cols="10" class="d-flex justify-center align-center pa-4">
+                </v-col>
+                <v-col cols="12">
+                    <v-divider></v-divider>
+                </v-col>
+                <v-col cols="12">
+                    <template v-for="i in order.length">
+                        <v-row :key="i" class="ma-1">
+                            <v-col cols="2" class="d-flex justify-center align-center pa-4">
+                                주문 {{ i }}
+                            </v-col>
+                            <v-col cols="10" class="d-flex justify-center pa-0">
+                                <v-card>
+                                    <v-card-title class="d-flex justify-space-between">
+                                        <div>
+                                            test
+                                        </div>
+                                        <div>
+                                            <v-btn @click="minNumber(i)">
+                                                X
+                                            </v-btn>
+                                        </div>
+                                    </v-card-title>
+                                    <v-card-text class="d-flex justify-center align-center">
+                                        <v-text-field
+                                            dense
+                                            outlined
+                                            label="상품평"
+                                            v-model="order[i-1].name"
+                                            hide-details="auto"
+                                        ></v-text-field>
+                                        <v-text-field
+                                            dense
+                                            outlined
+                                            label="색상"
+                                            class="pa-1"
+                                            v-model="order[i-1].color"
+                                            hide-details="auto"
+                                        ></v-text-field>
+                                        <v-text-field
+                                            dense
+                                            outlined
+                                            label="사이즈"
+                                            class="pa-1"
+                                            v-model="order[i-1].size"
+                                            hide-details="auto"
+                                        ></v-text-field>
+                                        <v-text-field
+                                            dense
+                                            outlined
+                                            label="수량"
+                                            class="pa-1"
+                                            v-model="order[i-1].count"
+                                            hide-details="auto"
+                                        ></v-text-field>
+                                        <v-text-field
+                                            dense
+                                            outlined
+                                            label="비고"
+                                            class="pa-1"
+                                            v-model="order[i-1].description"
+                                            hide-details="auto"
+                                        ></v-text-field>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+                    </template>
+                </v-col>
+                <v-col cols="12" class="d-flex justify-end">
+                    <v-btn @click="addNumber()">+ 주문추가</v-btn>
                 </v-col>
                 <v-col cols="10">
-                    <div class="d-flex justify-end">
-                        <v-btn @click="closeModal()" style="margin-right: 3px">추가</v-btn>
-                        <v-btn @click="closeModal()">취소</v-btn>
+                    <div class="d-flex justify-center">
+                        <v-btn @click="closeModal()">주문 완료</v-btn>
                     </div>
                 </v-col>
             </v-row>
@@ -76,6 +120,7 @@ export default Vue.component('order-modify', {
     },
     data() {
         return {
+            number: 1,
             valueData: false,
             dataTable: {
 				headers : [
@@ -105,6 +150,9 @@ export default Vue.component('order-modify', {
                     { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'}
                 ],
 			},
+            order: [
+                { name: null, color: null, size: null, count: null, description: null }
+            ]
         };
     },
     watch: {
@@ -115,16 +163,32 @@ export default Vue.component('order-modify', {
         valueData(newValue) {
             this.$emit('input', newValue);
         },
+        order: {
+            handler(n) {
+                console.log(n);
+            },
+            deep: true,
+        }
     },
     methods: {
         async modalCheck() {
         },
         async closeModal() {
+            this.order = [ { name: null, color: null, size: null, count: null, description: null } ];
             this.$emit('update:value', false);
             this.$emit('update:requestId', null);
         },
         async dialogChange(data) {
             console.log(data);
+        },
+        addNumber() {
+            const orderAdd = { name: null, color: null, size: null, count: null, description: null };
+            this.order.push(orderAdd);
+        },
+        minNumber(data) {
+            let index = data - 1;
+            this.order.splice(index,1);
+            console.log(this.order)
         }
     },
     mounted() {
