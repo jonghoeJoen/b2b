@@ -19,7 +19,7 @@
                                         placeholder="영문 소문자 또는 영문+숫자 조합 4~30자리"
                                         type="text"
                                         hide-details="auto"
-                                        v-model="data.id"
+                                        v-model="data.username"
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="3">
@@ -73,7 +73,7 @@
                                         autocomplete="on"
                                         type="text"
                                         hide-details="auto"
-                                        v-model="data.representativeName"
+                                        v-model="data.ceoName"
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="3">
@@ -99,7 +99,7 @@
                                         autocomplete="on"
                                         type="text"
                                         hide-details="auto"
-                                        v-model="data.postCode1"
+                                        v-model="data.address"
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="3">
@@ -112,7 +112,7 @@
                                         autocomplete="on"
                                         type="text"
                                         hide-details="auto"
-                                        v-model="data.storeLineNumber"
+                                        v-model="data.phoneNo"
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="3">
@@ -125,7 +125,7 @@
                                         autocomplete="on"
                                         type="text"
                                         hide-details="auto"
-                                        v-model="data.storePhoneNumber"
+                                        v-model="data.mobileNo"
                                     ></v-text-field>
                                 </v-col>
                             </v-row>
@@ -134,7 +134,6 @@
                     <v-card-actions>
                         <div style="width:100%">
                         <v-btn
-                            href="/sign-in"
                             color="primary"
                             width="100%"
                             @click="login();"
@@ -149,21 +148,21 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import axios from 'axios'
 
 export default Vue.extend({
     data() {
         return {
             drawer: true,
             data: {
-                id: null,  
+                username: null,  
                 password: null,
                 storeName: null,
-                representativeName: null,
+                ceoName: null,
                 managerName: null,
-                postCode1: null,
-                postCode2: null,
-                storeLineNumber: null,
-                storePhoneNumber: null,
+                address: null,
+                phoneNo: null,
+                mobileNo: null,
 
             },
             passwordCheck: null,
@@ -174,10 +173,79 @@ export default Vue.extend({
     computed: {
     },
     methods: {
+        async login() {
+            axios("http://localhost:5000//user/sign-up", {
+              method: "post",
+              data: this.data,
+            })
+              .then((response) => {
+                console.log(response.data["status"]);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+        },
+
+        test_get: () => {
+            axios("http://localhost:8082/test", {
+              method: "get",
+              params: {
+                email: "test@test.com",
+              },
+            })
+              .then((response) => {
+                console.log(response.data["status"]);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          },
+          test_post: () => {
+            axios("http://localhost:8082/test", {
+              method: "post",
+              data: {
+                email: "test@test.com",
+              },
+            })
+              .then((response) => {
+                console.log(response.data["status"]);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          },
+          test_put: () => {
+            axios("http://localhost:8082/test", {
+              method: "put",
+              params: {
+                email: "test@test.com",
+              },
+            })
+              .then((response) => {
+                console.log(response.data["status"]);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          },
+          test_delete: () => {
+            axios("http://localhost:8082/test", {
+              method: "delete",
+              params: {
+                email: "test@test.com",
+              },
+            })
+              .then((response) => {
+                console.log(response.data["status"]);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          },
     },
     mounted() {
     },
-    created() {
+    async created() {
     },
 });
 </script>
