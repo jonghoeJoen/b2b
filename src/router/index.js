@@ -23,6 +23,14 @@ const routes = [
                 path:'/orderNow',
                 component: () => import('../page/wholesaler/orderNow/Main.vue'),
             },
+            {
+                path:'/admin-wholesaler',
+                component: () => import('../page/admin/wholesaleList/Main.vue'),
+            },
+            {
+                path:'/admin-orderHistory',
+                component: () => import('../page/admin/orderHistory/Main.vue'),
+            },
         ]
         
     },
