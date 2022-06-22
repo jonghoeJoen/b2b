@@ -818,6 +818,12 @@ export default Vue.component('data-table-custom-component', {
             },
             deep:true,
         },
+        "options.page": {
+            handler(n) {
+                this.$emit('tablePage', this.options.page);
+            },
+            deep:true,
+        },
         // cell: {
         //     han
         // },

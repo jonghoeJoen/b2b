@@ -1,12 +1,15 @@
 <template>
+
 	<v-card class="pa-3" rounded flat>
+        <v-card-title>
+            <span class="sign-up-subtitle">주문내역 리스트</span>
+        </v-card-title>
         <v-row>
             <v-col class="col-12">
                 <v-row class="d-flex justify-center">
                     <v-col cols="10" class="d-flex justify-space-between">
-                        <div class="sign-up-subtitle">주문내역 리스트</div>
                         <div class="d-flex justify-center align-center">
-                            조회 기간
+                            <span class="ma-1" style="font-weight: bold;">조회 기간</span>
                             <picker-date-picker-component
                                 prepend-inner-icon="mdi-calendar"
                                 dense
@@ -55,6 +58,7 @@
                             :sort-desc="dataTable.sortDesc"
                             multi-sort
                             @click:multiButton="clickMultiButton($event)"
+                            @tablePage="tablePage"
                         ></data-table-custom-component>
                     </v-col>
                 </v-row>
@@ -118,7 +122,8 @@ export default{
                 startTime: '',
                 endTime: '',
                 text: '',
-            }
+            },
+            page: 1,
 		};
 	},
 	methods: {
@@ -126,7 +131,7 @@ export default{
             this.dataTable.loading = true;
             axios("http://127.0.0.1:5000/order/get-all", {
               method: "post",
-              data: this.searchData
+              data: {...this.searchData, page: this.page},
             })
             .then((response) => {
                 this.item = response.data.data;
@@ -152,6 +157,9 @@ export default{
 				}).catch(error => {})
 			}
 		},
+        tablePage(page) {
+            this.page = page;
+        },
 	},
 	mounted() {
         this.submit();
@@ -167,6 +175,12 @@ export default{
                     e.orderDate = moment(e.created_date).format('YYYY-MM-DD');
                 })
                 this.dataTable.items = n;
+            },
+            deep: true
+        },
+        "page": {
+            handler(n) {
+                this.submit();
             },
             deep: true
         }

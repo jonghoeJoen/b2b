@@ -55,6 +55,7 @@
                             :sort-desc="dataTable.sortDesc"
                             multi-sort
                             @click:multiButton="clickMultiButton($event)"
+                            @tablePage="tablePage"
                         ></data-table-custom-component>
                     </v-col>
                 </v-row>
@@ -71,7 +72,8 @@ export default{
 	data(){
 		return {
             DataTableCustom,
-            DatePicker,	
+            DatePicker,
+            page: 1,	
 			dataentry:{
                 name:"",
 				department:"",
@@ -125,8 +127,8 @@ export default{
 		async submit() {
             this.dataTable.loading = true;
             axios("http://127.0.0.1:5000/order/get-all", {
-              method: "post",
-              data: this.searchData
+                method: "post",
+                data: {...this.searchData, page: this.page},
             })
             .then((response) => {
                 this.item = response.data.data;
@@ -138,6 +140,9 @@ export default{
             this.searchData.startTime = '';
             this.searchData.endTime = '';
             this.searchData.text = '';
+        },
+        tablePage(page) {
+            this.page = page;
         },
 	},
 	mounted() {
@@ -151,6 +156,12 @@ export default{
                     e.orderDate = moment(e.created_date).format('YYYY-MM-DD');
                 })
                 this.dataTable.items = n;
+            },
+            deep: true
+        },
+        "page": {
+            handler(n) {
+                this.submit();
             },
             deep: true
         }

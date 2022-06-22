@@ -33,6 +33,7 @@
                             multi-sort
                             content-class="tableline equipment-table td50"
                             @click:multiButton="clickMultiButton($event)"
+                            @tablePage="tablePage"
                         >
                         </data-table-custom-component>
                     </v-col>
@@ -117,9 +118,14 @@ export default Vue.extend({
                 orderValue: false,
             },
             item: [],
+            page: 1,
 		};
 	},
 	methods: {
+        tablePage(page) {
+            console.log("ddd", page)
+            this.page = page;
+        },
         dialogChange() {
             this.dialog.accountValue = true;
         },
@@ -135,9 +141,11 @@ export default Vue.extend({
             }
         },
 		async submit() {
+            console.log(this.dataTable.page)
             this.dataTable.loading = true;
             axios("http://127.0.0.1:5000/shop/get-all", {
               method: "post",
+              data: {page: this.page},
             })
             .then((response) => {
                 this.item = response.data.data;
@@ -158,7 +166,14 @@ export default Vue.extend({
                 this.dataTable.items = n;
             },
             deep: true
+        },
+        "page": {
+            handler(n) {
+                this.submit();
+            },
+            deep: true
         }
+       
     }
 })
 </script>
