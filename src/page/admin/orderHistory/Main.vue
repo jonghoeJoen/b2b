@@ -64,6 +64,7 @@
 import axios from 'axios';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import DatePicker from '@/components/DatePicker.vue';
+import moment from 'moment';
 export default{
 	data(){
 		return {
@@ -76,16 +77,16 @@ export default{
             dataTable: {
 				headers : [
                     {
-                        text: '주문일자', sortable: true, value: 'id', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주문일자', sortable: true, value: 'orderDate', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장명', sortable: true, value: 'storeName', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장명', sortable: true, value: 'store_name', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '상품명', sortable: true, value: 'goods', align: 'center', cellClass: 'w-10 text-center',
+                        text: '상품명', sortable: true, value: 'item', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '색상', sortable: true, value: 'color', align: 'center', cellClass: 'w-10 text-center',
@@ -94,15 +95,16 @@ export default{
                         text: '사이즈', sortable: true, value: 'size', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '가능여부', sortable: true, value: 'possible', align: 'center', cellClass: 'w-10 text-center',
+                        text: '가능여부', sortable: true, value: 'available_status', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '비고', sortable: true, value: 'possible', align: 'center', cellClass: 'w-10 text-center',
+                        text: '비고', sortable: true, value: 'comment', align: 'center', cellClass: 'w-10 text-center',
                     },
 				],
                 page: 1,
                 itemsPerPage: 10,
                 totalRows: 10,
+                loading: false,
 				items: [
                     { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'}
                 ],
@@ -114,40 +116,38 @@ export default{
 		};
 	},
 	methods: {
-		// submit() {
-		// 	const path = 'http://127.0.0.1:5000/dataentry'
-		// 	const data = axios.post(path, {
-		// 		name:this.dataentry.name,
-		// 		department:this.dataentry.department,
-		// 	}
-		// )
-		// data.then(response => {
-		// 	console.log(response);
-		// 	this.items = response;
-		// })
-		// .catch(err =>{
-		// 	console.log(err);
-		// });
-		// },
+		async submit() {
+            this.dataTable.loading = true;
+            axios("http://127.0.0.1:5000/order/get-all", {
+              method: "post",
+            })
+            .then((response) => {
+                this.item = response.data.data;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+            this.dataTable.loading = false;
+        },
 	},
 	mounted() {
-		const path = 'http://127.0.0.1:5000/dataentry'
-		const test = 'admin'
-		const data = axios.post(path, {
-			name:test,
-			department:this.dataentry.department,
-			}
-		)      
-		data.then((response) => {
-			console.log(response.data.data);
-			console.log(response);
-			this.item.push(response.data.data);
-			console.log(this.item)
-		})
-		.catch(err =>{
-			console.log('err: ' + err);
-		});
-	}
+        this.submit();
+	},
+    watch: {
+        "item": {
+            handler(n) {
+                console.log(n)
+                this.dataTable.totalRows = n.length
+                n.forEach(e => {
+                    console.log(e.created_date);
+                    console.log(moment(e.created_date).format('YYYY-MM-DD'));
+                    e.orderDate = moment(e.created_date).format('YYYY-MM-DD');
+                })
+                this.dataTable.items = n;
+            },
+            deep: true
+        }
+    }
 }
 </script>
 

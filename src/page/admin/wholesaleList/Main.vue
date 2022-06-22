@@ -52,6 +52,7 @@
         ></new-account>
         <order-modify
             :value.sync="dialog.orderValue"
+            :requestId.sync="dialog.requestId"
         ></order-modify>
     </v-card>
 </template>
@@ -95,7 +96,7 @@ export default Vue.extend({
                 loading: false,
                 page: 1,
                 itemsPerPage: 10,
-                totalRows: 0,
+                totalRows: 10,
                 cell: {
                     multiButton: {
                         order: {
@@ -112,6 +113,7 @@ export default Vue.extend({
 			},
             dialog: {
                 accountValue: false,
+                requestId: null,
                 orderValue: false,
             },
             item: [],
@@ -128,60 +130,38 @@ export default Vue.extend({
         clickMultiButton(data) {
             console.log(data);
             if(data.header == 'order') {
-                console.log(data);
+                this.dialog.requestId = data.item.id;
                 this.dialog.orderValue = true; 
             }
         },
 		async submit() {
             this.dataTable.loading = true;
-            const path = 'http://127.0.0.1:5000/dash'
-            const test = 'admin'
-            const data = axios.post(path, {
-                name:test,
-                department:this.dataentry.department,
-                }
-            )      
-            data.then((response) => {
-                this.item.push(response.data.data);
-                this.dataTable.items = this.item[0];
-                this.dataTable.totalRows = this.dataTable.items.length;
-                console.log(this.dataTable)
+            axios("http://127.0.0.1:5000/shop/get-all", {
+              method: "post",
             })
-            .catch(err =>{
-                console.log('err: ' + err);
+            .then((response) => {
+                this.item = response.data.data;
+            })
+            .catch((error) => {
+                console.log(error);
             });
             this.dataTable.loading = false;
-		},
+        },
 	},
 	mounted() {
         this.submit();
-	}
+	},
+    watch: {
+        "item": {
+            handler(n) {
+                this.dataTable.totalRows = n.length
+                this.dataTable.items = n;
+            },
+            deep: true
+        }
+    }
 })
 </script>
 
 <style>
-.sign-up-title {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 50px;
-    line-height: 61px;
-}
-
-.sign-up-subtitle {
-    font-family: 'Work Sans';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 23px;
-    letter-spacing: -0.02em;
-}
-
-.sign-up-menu {
-    font-family: 'Noto Sans KR';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 29px;
-}
 </style>
