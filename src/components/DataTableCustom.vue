@@ -198,6 +198,17 @@
                                     @click.stop="clickIcon(item, header.value)"
                                 >{{cell[header.type][header.value].title}}</v-icon>
                             </template>
+                            <template v-else-if="header.type === 'autocomplete'">
+                                <v-autocomplete
+                                    v-model="item[header.value]"
+                                    dense
+                                    outlined
+                                    hide-details
+                                    :items="cell[header.type][header.value].items"
+                                    @click.stop
+                                    @change="changeAutocomplete($event, header.value, item)"
+                                ></v-autocomplete>
+                            </template>
                             <template v-else-if="header.type === 'button'">
                                 <v-btn
                                     v-if="isTrue(cell[header.type][header.value].conditional, item)"
@@ -797,6 +808,7 @@ export default Vue.component('data-table-custom-component', {
             indeterminate: false,
             checkTotal: null,
             clickedItem: null,
+            cellData: this.cell,
         };
     },
     watch: {
@@ -806,6 +818,9 @@ export default Vue.component('data-table-custom-component', {
             },
             deep:true,
         },
+        // cell: {
+        //     han
+        // },
         dataProps: {
             handler(n) {
                 this.$nextTick(() => {
