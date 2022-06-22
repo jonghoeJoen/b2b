@@ -6,17 +6,18 @@
                     <v-card-title class="d-flex justify-center">회원가입</v-card-title>
                     <v-card-subtitle class="d-flex justify-start mt-5 px-4">회원정보 입력</v-card-subtitle>
                     <v-card-text>
-                        <v-form>
+                        <v-form ref="form">
                             <v-row class="d-flex justify-center align-center">
                                 <v-col cols="12" class="d-flex align-center">
                                     <v-radio-group 
                                         row 
                                         dense
-                                        v-model="data.value"
+                                        v-model="data.roleId"
                                         class="d-flex ma-0"
+                                        :rules="[rules.role]"
                                         hide-details="auto">
-                                        <v-radio label="도매처" value=1></v-radio>
-                                        <v-radio label="판매처" value=2></v-radio>
+                                        <v-radio label="도매처" value = 2></v-radio>
+                                        <v-radio label="판매처" value = 3></v-radio>
                                     </v-radio-group>
                                 </v-col>
                                 <v-col cols="3">
@@ -64,7 +65,7 @@
                                         :rules="[rules.required, rules.passwordCheck]"
                                     ></v-text-field>
                                 </v-col>
-                                <template v-if="data.value == '1'">
+                                <template v-if="data.roleId == 3">
                                     <v-col cols="3">
                                         매장명
                                     </v-col>
@@ -89,10 +90,11 @@
                                         autocomplete="on"
                                         type="text"
                                         hide-details="auto"
-                                        v-model="data.ceoName"
+                                        v-model="data.name"
+                                        :rules="[rules.name]"
                                     ></v-text-field>
                                 </v-col>
-                                <template v-if="data.value == '1'">
+                                <template v-if="data.roleId == 3">
                                     <v-col cols="3">
                                         담당자명
                                     </v-col>
@@ -154,7 +156,7 @@
                         <v-btn
                             color="primary"
                             width="100%"
-                            @click="login();"
+                            @click="signUp();"
                         >회원가입</v-btn>
                         </div>
                     </v-card-actions>
@@ -173,16 +175,15 @@ export default Vue.extend({
         return {
             drawer: true,
             data: {
-                value: "1",
                 username: null,  
                 password: null,
                 storeName: null,
-                ceoName: null,
+                name: null,
                 managerName: null,
                 address: null,
                 phoneNo: null,
                 mobileNo: null,
-                roleId: 2,
+                roleId: null,
 
             },
             passwordCheck: null,
@@ -212,32 +213,49 @@ export default Vue.extend({
                         flag = true;
                     }
                     return flag || message
-                }
+                },
+                name: (value) => !!value || '필수',
+                role: (value) => !!value || '필수',
             },
         };
     },
     watch: {
-        'data.value': {
-            handler(n) {
-                console.log(n)
-            },
-            deep: true
-        }
     },
     computed: {
     },
     methods: {
-        async login() {
-            axios("http://localhost:5000/user/sign-up", {
-              method: "post",
-              data: this.data,
-            })
-              .then((response) => {
-                console.log(response.data["status"]);
-              })
-              .catch((error) => {
-                console.log(error);
-              });
+        async signUp() {
+            const validate = this.$refs.form.validate();
+            if (validate === false) return;
+            if (this.data.roleId == 2) {
+                axios("http://localhost:5000/user/customer-sign-up", {
+                method: "post",
+                data: this.data,
+                })
+                .then((response) => {
+                    console.log(response);
+                    if (response.data === "success") {
+                        alert("회원가입이 완료되었습니다.");
+                        this.$router.push("/sign-in");
+                    } else {
+                        alert("회원가입 실패");
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            } else {
+                axios("http://localhost:5000/user/seller-sign-up", {
+                method: "post",
+                data: this.data,
+                })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            }
         },
     },
     mounted() {

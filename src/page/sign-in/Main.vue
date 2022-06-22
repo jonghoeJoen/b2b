@@ -75,7 +75,6 @@ export default Vue.extend({
                     password: this.data.password
                 }).then((res) => {
                     localStorage.token = res.data.token
-                    console.log(localStorage.token)
                     this.$router.push("/")
                 }).catch((error) => {
                     console.log(error);
