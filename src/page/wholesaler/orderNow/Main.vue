@@ -57,6 +57,9 @@
                             @click:multiButton="clickMultiButton($event)"
                         ></data-table-custom-component>
                     </v-col>
+                    <v-col cols="10" class="d-flex justify-end">
+                        <v-btn class="btn-order" @click="saveOrder()">저장</v-btn>
+                    </v-col>
                 </v-row>
             </v-col>
         </v-row>
@@ -114,8 +117,8 @@ export default{
                         available_status: {
                             items: [
                                 {text: '가능', value: 'T'},
-                                {text: '부분 가능', value: 'F'},
-                                {text: '추후 가능', value: 'W'},
+                                {text: '부분 가능', value: 'P'},
+                                {text: '추후 가능', value: 'A'},
                                 {text: '품절', value: 'X'}
                             ],
                         },
@@ -150,6 +153,23 @@ export default{
             this.searchData.endTime = '';
             this.searchData.text = '';
         },
+        saveOrder() {
+            this.dataTable.loading = true;
+            axios("http://127.0.0.1:5000/order/save-order-list", {
+              method: "post",
+              data: this.dataTable.items
+            })
+            .then((response) => {
+                this.item = response.data.data;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+            this.dataTable.loading = false;
+            this.searchData.startTime = '';
+            this.searchData.endTime = '';
+            this.searchData.text = '';
+        }
 	},
 	mounted() {
         this.submit();
