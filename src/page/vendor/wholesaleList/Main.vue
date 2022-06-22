@@ -4,7 +4,7 @@
             <v-col class="col-12">
                 <v-row class="d-flex justify-center">
                     <v-col cols="10" class="d-flex justify-space-between">
-                        <div class="sign-up-subtitle">도매처 리스트</div>
+                        <div class="sign-up-subtitle">admin 도매처 리스트</div>
                         <div class="d-flex justify-center align-center">
                             <v-text-field
                                 dense
@@ -21,6 +21,7 @@
                         <data-table-custom-component
                             class="th-center"
                             dense
+                            countHide
                             :headers="dataTable.headers"
                             :items="dataTable.items"
                             :totalRows="dataTable.totalRows"
@@ -29,8 +30,6 @@
                             :search="dataTable.search"
                             :items-per-page="dataTable.itemsPerPage"
                             :cell="dataTable.cell"
-                            :sort-by="dataTable.sortBy"
-                            :sort-desc="dataTable.sortDesc"
                             multi-sort
                             content-class="tableline equipment-table td50"
                             @click:multiButton="clickMultiButton($event)"
@@ -39,7 +38,8 @@
                     </v-col>
                     <v-col cols="10">
                         <div style="width:100%; display:flex; justify-content: end;">
-                            <v-btn @click="dialogChange()">
+                            <v-btn 
+                                @click="dialogChange()">
                                 + 새 거래처 등록
                             </v-btn>
                         </div>
@@ -52,6 +52,7 @@
         ></new-account>
         <order-modify
             :value.sync="dialog.orderValue"
+            :requestId.sync="dialog.requestId"
         ></order-modify>
     </v-card>
 </template>
@@ -92,6 +93,7 @@ export default Vue.extend({
                     },
 				],
 				items: [],
+                loading: false,
                 page: 1,
                 itemsPerPage: 10,
                 totalRows: 10,
@@ -100,7 +102,7 @@ export default Vue.extend({
                         order: {
                             buttonList: [
                                 {
-                                    style: this.$vuetify.theme.dark ? 'color: #000;' : 'color: #000;',
+                                    color: 'view',
                                     contentClass: 'elevation-1 btn-order',
                                     title: '주문하기',
                                 },
@@ -111,6 +113,7 @@ export default Vue.extend({
 			},
             dialog: {
                 accountValue: false,
+                requestId: null,
                 orderValue: false,
             },
             item: [],
@@ -127,56 +130,38 @@ export default Vue.extend({
         clickMultiButton(data) {
             console.log(data);
             if(data.header == 'order') {
-                console.log(data);
+                this.dialog.requestId = data.item.id;
                 this.dialog.orderValue = true; 
             }
         },
-        async loadStoreList() {
-            const path = 'http://127.0.0.1:5000/dash'
-            const test = 'admin'
-            const data = axios.post(path, {
-                name:test,
-                department:this.dataentry.department,
-                }
-            )      
-            data.then((response) => {
-                this.item.push(response.data.data);
-                this.dataTable.items = this.item[0];
+		async submit() {
+            this.dataTable.loading = true;
+            axios("http://127.0.0.1:5000/shop/get-all", {
+              method: "post",
             })
-            .catch(err =>{
-                console.log('err: ' + err);
+            .then((response) => {
+                this.item = response.data.data;
+            })
+            .catch((error) => {
+                console.log(error);
             });
-        }
+            this.dataTable.loading = false;
+        },
 	},
 	mounted() {
-        this.loadStoreList();
-	}
+        this.submit();
+	},
+    watch: {
+        "item": {
+            handler(n) {
+                this.dataTable.totalRows = n.length
+                this.dataTable.items = n;
+            },
+            deep: true
+        }
+    }
 })
 </script>
 
 <style>
-.sign-up-title {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 50px;
-    line-height: 61px;
-}
-
-.sign-up-subtitle {
-    font-family: 'Work Sans';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 23px;
-    letter-spacing: -0.02em;
-}
-
-.sign-up-menu {
-    font-family: 'Noto Sans KR';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 29px;
-}
 </style>

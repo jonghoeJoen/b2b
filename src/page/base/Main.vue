@@ -57,7 +57,7 @@
                 </v-list-item-group>
 				<template v-if="userRole === 1">
 					<v-list-group
-    					:value="true"
+    					:value="false"
         				prepend-icon="mdi-account-circle">
 						<template v-slot:activator>
 							<v-list-item-title>관리자페이지</v-list-item-title>
