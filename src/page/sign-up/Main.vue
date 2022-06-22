@@ -227,7 +227,7 @@ export default Vue.extend({
     },
     methods: {
         async login() {
-            axios("http://localhost:5000//user/sign-up", {
+            axios("http://localhost:5000/user/sign-up", {
               method: "post",
               data: this.data,
             })

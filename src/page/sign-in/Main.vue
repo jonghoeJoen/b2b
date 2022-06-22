@@ -29,7 +29,6 @@
                         <div style="width:100%">
                         <v-spacer></v-spacer>
                         <v-btn
-                            href="/"
                             color="primary"
                             width="100%"
                             @click="login();"
@@ -52,6 +51,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import axios from 'axios'
 
 export default Vue.extend({
     data() {
@@ -68,6 +68,19 @@ export default Vue.extend({
     computed: {
     },
     methods: {
+        async login() {
+            console.log('logins')
+            axios("http://localhost:5000/login/login", {
+              method: "post",
+              data: this.data,
+            })
+              .then((response) => {
+                console.log(response.data["status"]);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+        },
     },
     mounted() {
     },
