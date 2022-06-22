@@ -12,19 +12,50 @@
                 <v-list-item-group
                     color="primary"
                 >
-                    <v-list-item
-                    v-for="(item, i) in items"
-                    :key="i"
-					:href="item.href"
-                    >
-                    <v-list-item-icon>
-                        <v-icon v-text="item.icon"></v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                        <v-list-item-title v-text="item.text"></v-list-item-title>
-                    </v-list-item-content>
-                    </v-list-item>
+					<tempalte v-if="userRole === 1">
+						<v-list-item
+						v-for="(item, i) in adminMenus"
+						:key="i"
+						:href="item.href"
+						>
+						<v-list-item-icon>
+							<v-icon v-text="item.icon"></v-icon>
+						</v-list-item-icon>
+						<v-list-item-content>
+							<v-list-item-title v-text="item.text"></v-list-item-title>
+						</v-list-item-content>
+						</v-list-item>
+					</tempalte>
+					<tempalte v-if="userRole === 2">
+						<v-list-item
+						v-for="(item, i) in customerMenus"
+						:key="i"
+						:href="item.href"
+						>
+						<v-list-item-icon>
+							<v-icon v-text="item.icon"></v-icon>
+						</v-list-item-icon>
+						<v-list-item-content>
+							<v-list-item-title v-text="item.text"></v-list-item-title>
+						</v-list-item-content>
+						</v-list-item>
+					</tempalte>
+					<tempalte v-if="userRole === 3">
+						<v-list-item
+						v-for="(item, i) in sellerMenus"
+						:key="i"
+						:href="item.href"
+						>
+						<v-list-item-icon>
+							<v-icon v-text="item.icon"></v-icon>
+						</v-list-item-icon>
+						<v-list-item-content>
+							<v-list-item-title v-text="item.text"></v-list-item-title>
+						</v-list-item-content>
+						</v-list-item>
+					</tempalte>
                 </v-list-item-group>
+				<template v-if="userRole === 1">
 					<v-list-group
     					:value="true"
         				prepend-icon="mdi-account-circle">
@@ -44,6 +75,7 @@
 						</v-list-item-content>
 						</v-list-item>
 					</v-list-group>
+				</template>
 			</v-list>
 		</v-navigation-drawer>
 		<v-app-bar app dense elevation="1">
@@ -54,7 +86,7 @@
 				</template> -->
 			</div>
 			<v-spacer></v-spacer>
-			<!-- <span>{{ name }}</span> -->
+			<span>{{ username }}</span>
 			<v-menu left bottom>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
@@ -68,7 +100,7 @@
 							<v-icon>mdi-logout</v-icon>
 						</v-list-item-icon>
 						<v-list-item-content>
-							<v-list-item-title>로그아웃</v-list-item-title>
+							<v-list-item-title @click="logout">로그아웃</v-list-item-title>
 						</v-list-item-content>
 					</v-list-item>
 				</v-list>
@@ -101,15 +133,16 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import isValidJwt from '@/utils';
 
 export default Vue.extend({
     data() {
         return {
             drawer: true,
-            items: [
+            customerMenus: [
 				{
 					icon: 'mdi-inbox',
-					text: '판매처 리스트',
+					text: '도매처 리스트',
 					href: '/wholesaler'
 				},
 				{
@@ -117,16 +150,35 @@ export default Vue.extend({
 					text: '주문 내역',
 					href: '/orderHistory'
 				},
+			],
+			sellerMenus: [
 				{
 					icon: 'mdi-star',
 					text: '주문 현황',
 					href: '/orderNow'
 				},
 			],
+			adminMenus: [
+				{
+					icon: 'mdi-inbox',
+					text: '도매처 리스트',
+					href: 'admin-wholesaler'
+				},
+				{
+					icon: 'mdi-star',
+					text: '주문 내역',
+					href: 'admin-orderHistory'
+				},
+				{
+					icon: 'mdi-star',
+					text: '주문 현황',
+					href: '/orderNow'
+				},
+      		],
 			admins: [
 				{
 					icon: 'mdi-inbox',
-					text: '판매처 리스트',
+					text: '도매처 리스트',
 					href: 'admin-wholesaler'
 				},
 				{
@@ -135,6 +187,8 @@ export default Vue.extend({
 					href: 'admin-orderHistory'
 				},
       		],
+			username: null,
+			userRole: null,
         };
     },
     watch: {
@@ -142,11 +196,30 @@ export default Vue.extend({
     computed: {
     },
     methods: {
+		loginCheck() {
+			if (isValidJwt()) {
+				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
+				this.username = data.username;
+				this.userRole = data.role;
+				console.log(data)
+			} else {
+				// console.log(isValidJwt())
+				// 로그인페이지로 이동
+				this.$router.push({
+					path: '/sign-in'
+				}).catch(error => {})
+			}
+		},
+		logout() {
+			localStorage.removeItem('token');
+			location.reload();
+		},
 
     },
     mounted() {
     },
     created() {
+		this.loginCheck();
     },
 });
 </script>

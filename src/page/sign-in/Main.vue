@@ -58,7 +58,7 @@ export default Vue.extend({
         return {
             drawer: true,
             data: {
-                id: null,
+                username: null,
                 password: null,
             }
         };
@@ -69,17 +69,17 @@ export default Vue.extend({
     },
     methods: {
         async login() {
-            console.log('logins')
-            axios("http://localhost:5000/login/login", {
-              method: "post",
-              data: this.data,
-            })
-              .then((response) => {
-                console.log(response.data["status"]);
-              })
-              .catch((error) => {
-                console.log(error);
-              });
+            let path = "http://127.0.0.1:5000/login/login";
+                axios.post(path, {
+                    username: this.data.username,
+                    password: this.data.password
+                }).then((res) => {
+                    localStorage.token = res.data.token
+                    console.log(localStorage.token)
+                    this.$router.push("/")
+                }).catch((error) => {
+                    console.log(error);
+                });
         },
     },
     mounted() {

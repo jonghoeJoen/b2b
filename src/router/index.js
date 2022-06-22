@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Base from "../page/base/Main.vue";
+import Base from "@/page/base/Main.vue";
 
 Vue.use(VueRouter);
 

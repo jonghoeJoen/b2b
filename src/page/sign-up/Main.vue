@@ -163,6 +163,7 @@ export default Vue.extend({
                 address: null,
                 phoneNo: null,
                 mobileNo: null,
+                roleId: 2,
 
             },
             passwordCheck: null,
@@ -185,63 +186,6 @@ export default Vue.extend({
                 console.log(error);
               });
         },
-
-        test_get: () => {
-            axios("http://localhost:8082/test", {
-              method: "get",
-              params: {
-                email: "test@test.com",
-              },
-            })
-              .then((response) => {
-                console.log(response.data["status"]);
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          },
-          test_post: () => {
-            axios("http://localhost:8082/test", {
-              method: "post",
-              data: {
-                email: "test@test.com",
-              },
-            })
-              .then((response) => {
-                console.log(response.data["status"]);
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          },
-          test_put: () => {
-            axios("http://localhost:8082/test", {
-              method: "put",
-              params: {
-                email: "test@test.com",
-              },
-            })
-              .then((response) => {
-                console.log(response.data["status"]);
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          },
-          test_delete: () => {
-            axios("http://localhost:8082/test", {
-              method: "delete",
-              params: {
-                email: "test@test.com",
-              },
-            })
-              .then((response) => {
-                console.log(response.data["status"]);
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          },
     },
     mounted() {
     },
