@@ -162,12 +162,12 @@ export default Vue.extend({
 				{
 					icon: 'mdi-inbox',
 					text: '도매처 리스트',
-					href: 'admin-wholesaler'
+					href: '/wholesaler'
 				},
 				{
 					icon: 'mdi-star',
 					text: '주문 내역',
-					href: 'admin-orderHistory'
+					href: '/orderHistory'
 				},
 				{
 					icon: 'mdi-star',
