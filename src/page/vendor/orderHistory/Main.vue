@@ -102,7 +102,7 @@ export default{
                         text: '사이즈', sortable: true, value: 'size', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '가능여부', sortable: true, value: 'available_status', align: 'center', cellClass: 'w-10 text-center',
+                        text: '가능여부', sortable: true, value: 'availableText', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '비고', sortable: true, value: 'comment', align: 'center', cellClass: 'w-10 text-center',
@@ -112,8 +112,7 @@ export default{
                 itemsPerPage: 10,
                 totalRows: 10,
                 loading: false,
-				items: [
-                ],
+				items: [],
 			},
             value: null,
             item: [],
@@ -173,6 +172,15 @@ export default{
                 this.dataTable.totalRows = n.length
                 n.forEach(e => {
                     e.orderDate = moment(e.created_date).format('YYYY-MM-DD');
+                    if (e.available_status == 'T') {
+                        e.availableText = '가능'
+                    } else if (e.available_status == 'P') {
+                        e.availableText = '부분 가능'
+                    } else if (e.available_status == 'A') {
+                        e.availableText = '추후 가능'
+                    } else if (e.available_status == 'X') {
+                        e.availableText = '품절'
+                    }
                 })
                 this.dataTable.items = n;
             },

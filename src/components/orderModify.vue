@@ -107,6 +107,7 @@
 </template>
 
 <script lang="ts">
+import isValidJwt from '@/utils';
 import axios from 'axios';
 import Vue from 'vue';
 
@@ -152,13 +153,14 @@ export default Vue.component('order-modify', {
 				items: [],
 			},
             order: [
-                { item: '', store_id: '', color: '', size: '', quantity: '', comment: '' }
+                { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' }
             ],
             rules: {
                 required: (value) => !!value || '필수',
             },
             store: [],
             flag: false,
+            userId: null,
         };
     },
     watch: {
@@ -180,7 +182,7 @@ export default Vue.component('order-modify', {
         async modalCheck() {
         },
         async closeModal() {
-            this.order = [ { item: '', store_id: this.requestId, color: '', size: '', quantity: '', comment: '' } ];
+            this.order = [ { item: '', user_id: this.userId , store_id: this.requestId, color: '', size: '', quantity: null, comment: '' } ];
             this.$emit('update:value', false);
             this.$emit('update:requestId', null);
         },
@@ -188,7 +190,7 @@ export default Vue.component('order-modify', {
             console.log(data);
         },
         addNumber() {
-            const orderAdd = { item: '', store_id: this.requestId , color: '', size: '', quantity: '', comment: '' };
+            const orderAdd = { item: '', user_id: this.userId ,store_id: this.requestId , color: '', size: '', quantity: null, comment: '' };
             this.order.push(orderAdd);
         },
         minNumber(data) {
@@ -233,9 +235,6 @@ export default Vue.component('order-modify', {
                 else if (this.order[i].quantity == '') {
                     alert('수량을 입력해 주세요');
                     return;
-                } else if (typeof this.order[i].quantity !== 'number'){
-                    alert('수량란에 숫자만 입력해 주세요');
-                    return;
                 }
                 else {
                     count +=1
@@ -249,23 +248,54 @@ export default Vue.component('order-modify', {
         createdOrder() {
             if (this.flag) {
                 const path = 'http://127.0.0.1:5000/order/create-order'
-                const test = this.order
+                const orderData = this.order
                 const data = axios.post(path, {
-                    data: test
+                    data: orderData
                     }
                 )      
                 data.then((response) => {
                     console.log(response);
+                    if(response.data) {
+                        alert('주문이 완료되었습니다.');
+                        this.modalClose();
+                    } else {
+                        alert('주문을 넣지 못하였습니다.');
+                        this.modalClose();
+                    }
                 })
                 .catch(err =>{
                     console.log('err: ' + err);
                 });
             }
+        },
+        loginCheck() {
+			if (isValidJwt()) {
+				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
+                this.userId = String(data.userId);
+                this.order[0].user_id = this.userId;
+				console.log(data)
+			} else {
+				// console.log(isValidJwt())
+				// 로그인페이지로 이동
+				this.$router.push({
+					path: '/sign-in'
+				}).catch(error => {})
+			}
+		},
+        modalClose() {
+            this.clean();
+            this.valueData = false;
+            this.$emit('update:value', false);
+        },
+        clean() {
+            this.order[0] = { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' };
+            this.loginCheck();
         }
     },
     mounted() {
     },
     created() {
+        this.loginCheck();
     },
 });
 </script>
