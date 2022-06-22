@@ -12,7 +12,7 @@
                                 dense
                                 outlined
                                 hide-details
-                                v-model="startTime"
+                                v-model="searchData.startTime"
                             >
                             </picker-date-picker-component>
                             ~
@@ -21,17 +21,19 @@
                                 dense
                                 outlined
                                 hide-details
-                                v-model="endTime"
+                                v-model="searchData.endTime"
                             >
                             </picker-date-picker-component>
                             <v-text-field
                                 dense
                                 outlined
                                 class="pa-0"
-                                hide-details="auto"   
+                                hide-details="auto" 
+                                v-model="searchData.text"  
                             ></v-text-field>
                             <v-btn
                                 class="pa-0 btn-black"
+                                @click="submit()"
                             >검색</v-btn>
                         </div>
                     </v-col>
@@ -61,8 +63,10 @@
     </v-card>
 </template>
 <script>
+import axios from 'axios';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import DatePicker from '@/components/DatePicker.vue';
+import moment from 'moment';
 export default{
 	data(){
 		return {
@@ -75,16 +79,16 @@ export default{
             dataTable: {
 				headers : [
                     {
-                        text: '주문일자', sortable: true, value: 'id', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주문일자', sortable: true, value: 'orderDate', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장명', sortable: true, value: 'storeName', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장명', sortable: true, value: 'store_name', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '상품명', sortable: true, value: 'goods', align: 'center', cellClass: 'w-10 text-center',
+                        text: '상품명', sortable: true, value: 'item', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '색상', sortable: true, value: 'color', align: 'center', cellClass: 'w-10 text-center',
@@ -93,43 +97,75 @@ export default{
                         text: '사이즈', sortable: true, value: 'size', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '가능여부', sortable: true, value: 'possible', align: 'center', cellClass: 'w-10 text-center',
+                        text: '가능여부', sortable: true, value: 'available_status', align: 'center', cellClass: 'w-10 text-center', type: 'autocomplete'
                     },
                     {
-                        text: '비고', sortable: true, value: 'possible', align: 'center', cellClass: 'w-10 text-center',
+                        text: '비고', sortable: true, value: 'comment', align: 'center', cellClass: 'w-10 text-center', type: 'textField'
                     },
 				],
                 page: 1,
                 itemsPerPage: 10,
                 totalRows: 10,
+                loading: false,
 				items: [
-                    { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'}
                 ],
+                cell: {
+                    autocomplete: {
+                        available_status: {
+                            items: [
+                                {text: '가능', value: 'T'},
+                                {text: '부분 가능', value: 'F'},
+                                {text: '추후 가능', value: 'W'},
+                                {text: '품절', value: 'X'}
+                            ],
+                        },
+                    },
+                }
 			},
             value: null,
-            startTime: null,
-            endTime: null
+            item: [],
+            searchData: {
+                userId: '',
+                startTime: '',
+                endTime: '',
+                text: '',
+            }
 		};
 	},
 	methods: {
-		// submit() {
-		// 	const path = 'http://127.0.0.1:5000/dataentry'
-		// 	const data = axios.post(path, {
-		// 		name:this.dataentry.name,
-		// 		department:this.dataentry.department,
-		// 	}
-		// )
-		// data.then(response => {
-		// 	console.log(response);
-		// 	this.items = response;
-		// })
-		// .catch(err =>{
-		// 	console.log(err);
-		// });
-		// },
+		async submit() {
+            this.dataTable.loading = true;
+            axios("http://127.0.0.1:5000/order/get-all", {
+              method: "post",
+              data: this.searchData
+            })
+            .then((response) => {
+                this.item = response.data.data;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+            this.dataTable.loading = false;
+            this.searchData.startTime = '';
+            this.searchData.endTime = '';
+            this.searchData.text = '';
+        },
 	},
 	mounted() {
-	}
+        this.submit();
+	},
+    watch: {
+        "item": {
+            handler(n) {
+                this.dataTable.totalRows = n.length
+                n.forEach(e => {
+                    e.orderDate = moment(e.created_date).format('YYYY-MM-DD');
+                })
+                this.dataTable.items = n;
+            },
+            deep: true
+        }
+    }
 }
 </script>
 

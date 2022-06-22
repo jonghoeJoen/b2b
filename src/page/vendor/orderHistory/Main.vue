@@ -67,6 +67,7 @@ import axios from 'axios';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import moment from 'moment';
+import isValidJwt from '@/utils';
 export default{
 	data(){
 		return {
@@ -108,7 +109,6 @@ export default{
                 totalRows: 10,
                 loading: false,
 				items: [
-                    { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'}
                 ],
 			},
             value: null,
@@ -139,10 +139,26 @@ export default{
             this.searchData.endTime = '';
             this.searchData.text = '';
         },
+        loginCheck() {
+			if (isValidJwt()) {
+				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
+                this.searchData.userId = String(data.userId);
+				console.log(data)
+			} else {
+				// console.log(isValidJwt())
+				// 로그인페이지로 이동
+				this.$router.push({
+					path: '/sign-in'
+				}).catch(error => {})
+			}
+		},
 	},
 	mounted() {
         this.submit();
 	},
+    created() {
+        this.loginCheck();
+    },
     watch: {
         "item": {
             handler(n) {
