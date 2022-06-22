@@ -13,6 +13,7 @@ module.exports = {
   },
   rules: {
     "vue/multi-word-component-names": 0,
+    "no-unused-vars": ["warn", { "varsIgnorePattern": "VARIABLE_NAME"}],
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
     'prettier/prettier': 0,
