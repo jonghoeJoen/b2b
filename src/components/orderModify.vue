@@ -233,7 +233,11 @@ export default Vue.component('order-modify', {
                 else if (this.order[i].quantity == '') {
                     alert('수량을 입력해 주세요');
                     return;
-                } else {
+                } else if (typeof this.order[i].quantity !== 'number'){
+                    alert('수량란에 숫자만 입력해 주세요');
+                    return;
+                }
+                else {
                     count +=1
                 }
             }
