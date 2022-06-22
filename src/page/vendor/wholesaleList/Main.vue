@@ -6,21 +6,21 @@
                     <v-col cols="10" class="d-flex justify-space-between">
                         <div class="sign-up-subtitle">도매처 리스트</div>
                         <div class="d-flex justify-center align-center">
-                                <v-text-field
-                                    dense
-                                    outlined
-                                    class="pa-0"
-                                    hide-details="auto"    
-                                ></v-text-field>
-                                <v-btn>검색</v-btn>
+                            <v-text-field
+                                dense
+                                outlined
+                                class="pa-0"
+                                hide-details="auto"   
+                            ></v-text-field>
+                            <v-btn
+                                class="pa-0 btn-black"
+                            >검색</v-btn>
                         </div>
                     </v-col>
                     <v-col cols="10">
                         <data-table-custom-component
                             class="th-center"
                             dense
-                            itemsPerPageHide
-                            countHide
                             :headers="dataTable.headers"
                             :items="dataTable.items"
                             :totalRows="dataTable.totalRows"
@@ -57,7 +57,7 @@
 </template>
 <script>
 import Vue from 'vue';
-// import axios from 'axios';
+import axios from 'axios';
 import newAccount from '../../../components/newAccount.vue';
 import OrderModify from '../../../components/orderModify.vue';
 import DataTableCustom from '@/components/DataTableCustom.vue';
@@ -76,26 +76,22 @@ export default Vue.extend({
                         text: '번호', sortable: true, value: 'id', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장명', sortable: true, value: 'storeName', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장명', sortable: true, value: 'store_name', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장 휴대전화', sortable: true, value: 'phone1', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장 휴대전화', sortable: true, value: 'phone_no', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장 유선번호', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장 유선번호', sortable: true, value: 'mobile_no', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '주문하기', value: 'order', align: 'center', cellClass: 'w-10 text-center', type: 'multiButton',
                     },
 				],
-				items: [
-                    { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'},
-                    { id: 2, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'},
-                    { id: 3, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'},
-                ],
+				items: [],
                 page: 1,
                 itemsPerPage: 10,
                 totalRows: 10,
@@ -104,9 +100,8 @@ export default Vue.extend({
                         order: {
                             buttonList: [
                                 {
-                                    color: 'view',
                                     style: this.$vuetify.theme.dark ? 'color: #000;' : 'color: #000;',
-                                    contentClass: 'elevation-1 btn-black',
+                                    contentClass: 'elevation-1 btn-order',
                                     title: '주문하기',
                                 },
                             ]
@@ -117,7 +112,8 @@ export default Vue.extend({
             dialog: {
                 accountValue: false,
                 orderValue: false,
-            }
+            },
+            item: [],
 		};
 	},
 	methods: {
@@ -134,23 +130,26 @@ export default Vue.extend({
                 console.log(data);
                 this.dialog.orderValue = true; 
             }
+        },
+        async loadStoreList() {
+            const path = 'http://127.0.0.1:5000/dash'
+            const test = 'admin'
+            const data = axios.post(path, {
+                name:test,
+                department:this.dataentry.department,
+                }
+            )      
+            data.then((response) => {
+                this.item.push(response.data.data);
+                this.dataTable.items = this.item[0];
+            })
+            .catch(err =>{
+                console.log('err: ' + err);
+            });
         }
-		// submit() {
-		// 	const path = 'http://127.0.0.1:5000/dataentry'
-		// 	const data = axios.post(path, {
-		// 		name:this.dataentry.name,
-		// 		department:this.dataentry.department,
-		// 	}
-		// )
-		// data.then(response => {
-		// 	this.items = response;
-		// })
-		// .catch(err =>{
-		// 	console.log(err);
-		// });
-		// },
 	},
 	mounted() {
+        this.loadStoreList();
 	}
 })
 </script>
