@@ -114,6 +114,7 @@ export default{
             value: null,
             item: [],
             searchData: {
+                userId: '',
                 startTime: '',
                 endTime: '',
                 text: '',
