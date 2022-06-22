@@ -4,7 +4,7 @@
             <v-col class="col-12">
                 <v-row class="d-flex justify-center">
                     <v-col cols="10" class="d-flex justify-space-between">
-                        <div class="sign-up-subtitle">admin 도매처 리스트</div>
+                        <div class="sign-up-subtitle">도매처 리스트</div>
                         <div class="d-flex justify-center align-center">
                             <v-text-field
                                 dense
