@@ -12,7 +12,7 @@
                                 dense
                                 outlined
                                 hide-details
-                                v-model="startTime"
+                                v-model="searchData.startTime"
                             >
                             </picker-date-picker-component>
                             ~
@@ -21,17 +21,19 @@
                                 dense
                                 outlined
                                 hide-details
-                                v-model="endTime"
+                                v-model="searchData.endTime"
                             >
                             </picker-date-picker-component>
                             <v-text-field
                                 dense
                                 outlined
                                 class="pa-0"
-                                hide-details="auto"   
+                                hide-details="auto" 
+                                v-model="searchData.text"  
                             ></v-text-field>
                             <v-btn
                                 class="pa-0 btn-black"
+                                @click="submit()"
                             >검색</v-btn>
                         </div>
                     </v-col>
@@ -111,8 +113,11 @@ export default{
 			},
             value: null,
             item: [],
-            startTime: null,
-            endTime: null,
+            searchData: {
+                startTime: '',
+                endTime: '',
+                text: '',
+            }
 		};
 	},
 	methods: {
@@ -120,6 +125,7 @@ export default{
             this.dataTable.loading = true;
             axios("http://127.0.0.1:5000/order/get-all", {
               method: "post",
+              data: this.searchData
             })
             .then((response) => {
                 this.item = response.data.data;
@@ -128,6 +134,9 @@ export default{
                 console.log(error);
             });
             this.dataTable.loading = false;
+            this.searchData.startTime = '';
+            this.searchData.endTime = '';
+            this.searchData.text = '';
         },
 	},
 	mounted() {
@@ -136,11 +145,8 @@ export default{
     watch: {
         "item": {
             handler(n) {
-                console.log(n)
                 this.dataTable.totalRows = n.length
                 n.forEach(e => {
-                    console.log(e.created_date);
-                    console.log(moment(e.created_date).format('YYYY-MM-DD'));
                     e.orderDate = moment(e.created_date).format('YYYY-MM-DD');
                 })
                 this.dataTable.items = n;

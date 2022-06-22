@@ -2,8 +2,9 @@
     <v-dialog
         scrollable
         persistent
-        width="800px"
+        width="1400px"
         v-model="valueData"
+        style="overflow-y: scroll"
         @click:outside="closeModal()"
         @keydown.esc="closeModal()">
         <v-card class="pa-5">
@@ -15,18 +16,23 @@
                             <h3>도매처 등록</h3>
                         </div>
                     </div>
-                    <v-col cols="3" class="d-flex justify-center align-center">
+                    <v-col cols="2" class="d-flex justify-center align-center">
                         매장명
                     </v-col>
-                    <v-col cols="9" class="d-flex justify-center align-center">
+                    <v-col cols="10" class="d-flex justify-center align-center">
                         <v-text-field 
                             dense
                             outlined
                             type="text" 
                             class="form-control" 
-                            hide-details="auto">
+                            hide-details="auto"
+                            v-model="searchData.text"
+                            >
                         </v-text-field>
-                        <v-btn> 검색 </v-btn>
+                        <v-btn
+                            class="pa-0 btn-black"
+                            @click="submit()">
+                        검색 </v-btn>
                     </v-col>
                     <v-col cols="12">
                         <data-table-custom-component
@@ -64,6 +70,7 @@
 </template>
 
 <script lang="ts">
+import axios from 'axios';
 import Vue from 'vue';
 
 export default Vue.component('new-account', {
@@ -86,28 +93,45 @@ export default Vue.component('new-account', {
                         text: '번호', sortable: true, value: 'id', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장명', sortable: true, value: 'storeName', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장명', sortable: true, value: 'store_name', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장 휴대전화', sortable: true, value: 'phone1', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장 휴대전화', sortable: true, value: 'phone_no', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '매장 유선번호', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장 유선번호', sortable: true, value: 'mobile_no', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '주문하기', sortable: true, value: 'order', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주문하기', value: 'order', align: 'center', cellClass: 'w-10 text-center', type: 'multiButton',
                     },
 				],
-				items: [
-                    { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000', }
-                ],
+				items: [],                
+                cell: {
+                    multiButton: {
+                        order: {
+                            buttonList: [
+                                {
+                                    contentClass: 'elevation-1 btn-order',
+                                    title: '주문하기',
+                                },
+                            ]
+                        },
+                    },
+                },
                 page: 1,
                 itemsPerPage: 10,
                 totalRows: 10,
+                loading: false,
 			},
+            searchData: {
+                startTime: '',
+                endTime: '',
+                text: '',
+            },
+            item: [],
         };
     },
     watch: {
@@ -118,6 +142,10 @@ export default Vue.component('new-account', {
         valueData(newValue) {
             this.$emit('input', newValue);
         },
+        item(n) {
+            console.log(n)
+            this.dataTable.items = this.item;
+        }
     },
     methods: {
         async modalCheck() {
@@ -128,7 +156,22 @@ export default Vue.component('new-account', {
         },
         async dialogChange(data) {
             console.log(data);
-        }
+        },
+        async submit() {
+            this.dataTable.loading = true;
+            axios("http://127.0.0.1:5000/order/get-all", {
+              method: "post",
+              data: this.searchData
+            })
+            .then((response) => {
+                console.log(response.data.data)
+                this.item = response.data.data;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+            this.dataTable.loading = false;
+        },
     },
     mounted() {
     },
