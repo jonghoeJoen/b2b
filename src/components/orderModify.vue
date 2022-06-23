@@ -36,57 +36,69 @@
                             </v-col>
                             <v-col cols="10" class="d-flex justify-center pa-0">
                                 <v-card>
-                                    <v-card-title class="d-flex justify-end">
+                                    <v-card-title class="d-flex justify-end py-0">
                                         <div>
-                                            <v-btn @click="minNumber(i)">
+                                            <v-btn @click="minNumber(i)" x-small>
                                                 X
                                             </v-btn>
                                         </div>
                                     </v-card-title>
                                     <v-card-text class="d-flex justify-center align-center">
-                                        <v-text-field
-                                            dense
-                                            outlined
-                                            label="상품명"
-                                            v-model="order[i-1].item"
-                                            hide-details="auto"
-                                            :rules="[rules.required]"
-                                        ></v-text-field>
-                                        <v-text-field
-                                            dense
-                                            outlined
-                                            label="색상"
-                                            class="pa-1"
-                                            v-model="order[i-1].color"
-                                            hide-details="auto"
-                                            :rules="[rules.required]"
-                                        ></v-text-field>
-                                        <v-text-field
-                                            dense
-                                            outlined
-                                            label="사이즈"
-                                            class="pa-1"
-                                            v-model="order[i-1].size"
-                                            hide-details="auto"
-                                            :rules="[rules.required]"
-                                        ></v-text-field>
-                                        <v-text-field
-                                            dense
-                                            outlined
-                                            label="수량"
-                                            class="pa-1"
-                                            v-model="order[i-1].quantity"
-                                            hide-details="auto"
-                                            :rules="[rules.required]"
-                                        ></v-text-field>
-                                        <v-text-field
-                                            dense
-                                            outlined
-                                            label="비고"
-                                            class="pa-1"
-                                            v-model="order[i-1].comment"
-                                            hide-details="auto"
-                                        ></v-text-field>
+                                        <v-row>
+                                            <v-col cols="4">
+                                                <v-text-field
+                                                    dense
+                                                    outlined
+                                                    label="상품명"
+                                                    v-model="order[i-1].item"
+                                                    hide-details="auto"
+                                                    :rules="[rules.required]"
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col cols="2">
+                                                <v-text-field
+                                                    dense
+                                                    outlined
+                                                    label="색상"
+                                                    class="pa-1"
+                                                    v-model="order[i-1].color"
+                                                    hide-details="auto"
+                                                    :rules="[rules.required]"
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col cols="2">
+                                                <v-text-field
+                                                    dense
+                                                    outlined
+                                                    label="사이즈"
+                                                    class="pa-1"
+                                                    v-model="order[i-1].size"
+                                                    hide-details="auto"
+                                                    :rules="[rules.required]"
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col cols="2">
+                                                <v-text-field
+                                                    dense
+                                                    outlined
+                                                    label="수량"
+                                                    class="pa-1"
+                                                    v-model="order[i-1].quantity"
+                                                    hide-details="auto"
+                                                    :rules="[rules.required]"
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col cols="2">
+                                                <v-text-field
+                                                    dense
+                                                    outlined
+                                                    label="비고"
+                                                    class="pa-1"
+                                                    v-model="order[i-1].comment"
+                                                    hide-details="auto"
+                                                ></v-text-field>
+                                            </v-col>
+                                        </v-row>
                                     </v-card-text>
                                 </v-card>
                             </v-col>
@@ -153,6 +165,10 @@ export default Vue.component('order-modify', {
 				items: [],
 			},
             order: [
+                { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' },
+                { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' },
+                { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' },
+                { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' },
                 { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' }
             ],
             rules: {
@@ -272,7 +288,9 @@ export default Vue.component('order-modify', {
 			if (isValidJwt()) {
 				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
                 this.userId = String(data.userId);
-                this.order[0].user_id = this.userId;
+                for (let i = 0; i < this.order.length; i++) {
+                    this.order[i].user_id = this.userId;
+                }
 				console.log(data)
 			} else {
 				// console.log(isValidJwt())
@@ -288,7 +306,9 @@ export default Vue.component('order-modify', {
             this.$emit('update:value', false);
         },
         clean() {
-            this.order[0] = { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' };
+            for (let i = 0; i < this.order.length; i++) {
+                this.order[i] = { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' };
+            }
             this.loginCheck();
         }
     },
