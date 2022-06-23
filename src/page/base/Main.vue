@@ -201,16 +201,6 @@ export default Vue.extend({
 				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
 				this.username = data.username;
 				this.userRole = data.role;
-				if (this.userRole == 3) {
-					this.$router.push({
-						path: '/orderNow'
-					}) 
-				}
-				else {
-					this.$router.push({
-						path: '/wholesaler'
-					}) 
-				}
 			} else {
 				// console.log(isValidJwt())
 				// 로그인페이지로 이동
