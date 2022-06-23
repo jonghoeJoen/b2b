@@ -183,7 +183,7 @@ export default Vue.extend({
                 address: null,
                 phoneNo: null,
                 mobileNo: null,
-                roleId: null,
+                roleId: "2",
 
             },
             passwordCheck: null,
@@ -233,7 +233,6 @@ export default Vue.extend({
                 data: this.data,
                 })
                 .then((response) => {
-                    console.log(response);
                     if (response.data === "success") {
                         alert("회원가입이 완료되었습니다.");
                         this.$router.push("/sign-in");
@@ -250,7 +249,12 @@ export default Vue.extend({
                 data: this.data,
                 })
                 .then((response) => {
-                    console.log(response);
+                    if (response.data === "success") {
+                        alert("회원가입이 완료되었습니다.");
+                        this.$router.push("/sign-in");
+                    } else {
+                        alert("회원가입 실패");
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
