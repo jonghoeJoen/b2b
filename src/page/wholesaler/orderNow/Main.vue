@@ -149,6 +149,7 @@ export default{
               data: {...this.searchData, page: this.page},
             })
             .then((response) => {
+                console.log(response);
                 this.item = response.data.data;
             })
             .catch((error) => {
@@ -179,9 +180,10 @@ export default{
         loginCheck() {
 			if (isValidJwt()) {
 				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
-                this.searchData.userId = String(data.userId);
+                // this.searchData.userId = String(data.userId);
                 this.searchData.storeId = String(data.storeId);
-				console.log(data)
+				console.log(data);
+                this.submit();
 			} else {
 				this.$router.push({
 					path: '/sign-in'
@@ -190,7 +192,7 @@ export default{
 		},
 	},
 	mounted() {
-        this.submit();
+        this.loginCheck();
 	},
     watch: {
         "item": {
