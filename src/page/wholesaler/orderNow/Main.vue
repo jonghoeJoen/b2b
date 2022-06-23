@@ -164,7 +164,7 @@ export default{
             this.dataTable.loading = true;
             axios("http://127.0.0.1:5000/order/save-order-list", {
               method: "post",
-              data: {...this.dataTable.items, page: this.page},
+              data: this.dataTable.items,
             })
             .then((response) => {
                 this.item = response.data.data;
