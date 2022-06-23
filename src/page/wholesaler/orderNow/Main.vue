@@ -66,6 +66,7 @@
     </v-card>
 </template>
 <script>
+import isValidJwt from '@/utils';
 import axios from 'axios';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import DatePicker from '@/components/DatePicker.vue';
@@ -88,7 +89,7 @@ export default{
                         text: '매장명', sortable: true, value: 'store_name', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주소', sortable: true, value: 'store_location', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '상품명', sortable: true, value: 'item', align: 'center', cellClass: 'w-10 text-center',
@@ -132,6 +133,7 @@ export default{
                 startTime: '',
                 endTime: '',
                 text: '',
+                storeId: '',
             }
 		};
 	},
@@ -169,7 +171,19 @@ export default{
             this.searchData.startTime = '';
             this.searchData.endTime = '';
             this.searchData.text = '';
-        }
+        },
+        loginCheck() {
+			if (isValidJwt()) {
+				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
+                this.searchData.userId = String(data.userId);
+                this.searchData.storeId = String(data.storeId);
+				console.log(data)
+			} else {
+				this.$router.push({
+					path: '/sign-in'
+				}).catch(error => {})
+			}
+		},
 	},
 	mounted() {
         this.submit();
