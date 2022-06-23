@@ -134,6 +134,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import isValidJwt from '@/utils';
+import store from '@/store';
 
 export default Vue.extend({
     data() {
@@ -201,6 +202,7 @@ export default Vue.extend({
 				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
 				this.username = data.username;
 				this.userRole = data.role;
+				store.commit('SET_ROLE', this.userRole);
 			} else {
 				// console.log(isValidJwt())
 				// 로그인페이지로 이동

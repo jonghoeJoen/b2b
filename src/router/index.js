@@ -1,16 +1,21 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Base from "@/page/base/Main.vue";
+import store from '@/store';
 
 Vue.use(VueRouter);
 
 const routes = [
     {
         path: "/",
-        redirect: '/wholesaler',
+        redirect: '/page',
         name: "home",
         component: () => import("../page/base/Main.vue"),
         children: [
+            {
+                path:'/page',
+                component: () => import('../page/base/DefaultPage.vue'),
+            },
             {
                 path:'/wholesaler',
                 component: () => import('../page/vendor/wholesaleList/Main.vue'),
@@ -63,7 +68,7 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+  
 });
-
 
 export default router;
