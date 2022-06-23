@@ -87,7 +87,7 @@ export default{
                         text: '매장명', sortable: true, value: 'store_name', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
-                        text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주소', sortable: true, value: 'store_location', align: 'center', cellClass: 'w-10 text-center',
                     },
                     {
                         text: '상품명', sortable: true, value: 'item', align: 'center', cellClass: 'w-10 text-center',
@@ -109,9 +109,7 @@ export default{
                 itemsPerPage: 10,
                 totalRows: 10,
                 loading: false,
-				items: [
-                    { id: 1, storeName: 'test', postcode: 'tewstsetsets', phone1: '010-0000-0000', phone2: '02)000-0000'}
-                ],
+				items: [],
 			},
             value: null,
             item: [],
@@ -120,6 +118,7 @@ export default{
                 startTime: '',
                 endTime: '',
                 text: '',
+                storeId: '',
             }
 		};
 	},

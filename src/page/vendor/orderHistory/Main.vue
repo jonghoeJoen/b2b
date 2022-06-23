@@ -1,46 +1,49 @@
 <template>
-
 	<v-card class="pa-3" rounded flat>
-        <v-card-title>
-            <span class="sign-up-subtitle">주문내역 리스트</span>
-        </v-card-title>
         <v-row>
             <v-col class="col-12">
                 <v-row class="d-flex justify-center">
-                    <v-col cols="10" class="d-flex justify-space-between">
-                        <div class="d-flex justify-center align-center">
-                            <span class="ma-1" style="font-weight: bold;">조회 기간</span>
-                            <picker-date-picker-component
-                                prepend-inner-icon="mdi-calendar"
-                                dense
-                                outlined
-                                hide-details
-                                v-model="searchData.startTime"
-                            >
-                            </picker-date-picker-component>
-                            ~
-                            <picker-date-picker-component
-                                prepend-inner-icon="mdi-calendar"
-                                dense
-                                outlined
-                                hide-details
-                                v-model="searchData.endTime"
-                            >
-                            </picker-date-picker-component>
-                            <v-text-field
-                                dense
-                                outlined
-                                class="pa-0"
-                                hide-details="auto" 
-                                v-model="searchData.text"  
-                            ></v-text-field>
-                            <v-btn
-                                class="pa-0 btn-black"
-                                @click="submit()"
-                            >검색</v-btn>
-                        </div>
+                    <v-col cols="12" md="10" xs="12">
+                        <v-row class="d-flex justify-space-between">
+                            <v-col cols=12 md="3" xs="12" class="d-flex justify-center align-center">
+                                <div class="sign-up-subtitle d-flex align-center">주문내역 리스트</div>
+                            </v-col> 
+                            <v-col cols=12 md="8" sm="12" class="d-flex justify-center align-center">
+                                <span class="ma-0 pa-1 font-size-10" style="font-weight: bold;">조회 기간</span>
+                                <div class="d-flex jusitfy-center align-center w-30 pr-4">
+                                    <picker-date-picker-component
+                                        prepend-inner-icon="mdi-calendar"
+                                        dense
+                                        outlined
+                                        hide-details
+                                        v-model="searchData.startTime"
+                                    >
+                                    </picker-date-picker-component>
+                                    ~
+                                    <picker-date-picker-component
+                                        prepend-inner-icon="mdi-calendar"
+                                        dense
+                                        outlined
+                                        hide-details
+                                        v-model="searchData.endTime"
+                                    >
+                                    </picker-date-picker-component>
+                                </div>
+                                <v-text-field
+                                    dense
+                                    outlined
+                                    class="pr-4"
+                                    hide-details="auto" 
+                                    v-model="searchData.text"  
+                                ></v-text-field>
+                                <v-btn
+                                    class="pa-0 btn-black"
+                                    @click="submit()"
+                                >검색</v-btn>
+                            </v-col>   
+                        </v-row>
                     </v-col>
-                    <v-col cols="10">
+                    <v-col md="10" xs="12">
                         <data-table-custom-component
                             class="th-center"
                             dense
@@ -121,6 +124,7 @@ export default{
                 startTime: '',
                 endTime: '',
                 text: '',
+                storeId: '',
             },
             page: 1,
 		};
