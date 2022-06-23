@@ -55,6 +55,7 @@
                             :sort-desc="dataTable.sortDesc"
                             multi-sort
                             @click:multiButton="clickMultiButton($event)"
+                            @tablePage="tablePage"
                         ></data-table-custom-component>
                     </v-col>
                     <v-col cols="10" class="d-flex justify-end">
@@ -132,15 +133,19 @@ export default{
                 startTime: '',
                 endTime: '',
                 text: '',
-            }
+            },
+            page: 1,
 		};
 	},
 	methods: {
+        tablePage(page) {
+            this.page = page;
+        },
 		async submit() {
             this.dataTable.loading = true;
             axios("http://127.0.0.1:5000/order/get-all", {
               method: "post",
-              data: this.searchData
+              data: {...this.searchData, page: this.page},
             })
             .then((response) => {
                 this.item = response.data.data;
@@ -157,7 +162,7 @@ export default{
             this.dataTable.loading = true;
             axios("http://127.0.0.1:5000/order/save-order-list", {
               method: "post",
-              data: this.dataTable.items
+              data: {...this.dataTable.items, page: this.page},
             })
             .then((response) => {
                 this.item = response.data.data;
@@ -165,7 +170,7 @@ export default{
             .catch((error) => {
                 console.log(error);
             });
-            this.dataTable.loading = false;
+        this.dataTable.loading = false;
             this.searchData.startTime = '';
             this.searchData.endTime = '';
             this.searchData.text = '';
@@ -182,6 +187,12 @@ export default{
                     e.orderDate = moment(e.created_date).format('YYYY-MM-DD');
                 })
                 this.dataTable.items = n;
+            },
+            deep: true
+        },
+        "page": {
+            handler(n) {
+                this.submit();
             },
             deep: true
         }
