@@ -5,8 +5,8 @@
         width="1400px"
         v-model="valueData"
         style="overflow-y: scroll"
-        @click:outside="closeModal()"
-        @keydown.esc="closeModal()">
+        @click:outside="modalClose()"
+        @keydown.esc="modalClose()">
         <v-card class="pa-3" style="overflow-y: scroll">
             <v-row dense class="d-flex justify-center">
                 <v-col cols="12">
@@ -24,6 +24,7 @@
                     매장 주소
                 </v-col>
                 <v-col cols="10" class="d-flex justify-start align-center pa-4">
+                    {{store.store_location}}
                 </v-col>
                 <v-col cols="12">
                     <v-divider></v-divider>
@@ -52,7 +53,6 @@
                                                     label="상품명"
                                                     v-model="order[i-1].item"
                                                     hide-details="auto"
-                                                    :rules="[rules.required]"
                                                 ></v-text-field>
                                             </v-col>
                                             <v-col cols="2">
@@ -63,7 +63,6 @@
                                                     class="pa-1"
                                                     v-model="order[i-1].color"
                                                     hide-details="auto"
-                                                    :rules="[rules.required]"
                                                 ></v-text-field>
                                             </v-col>
                                             <v-col cols="2">
@@ -74,7 +73,6 @@
                                                     class="pa-1"
                                                     v-model="order[i-1].size"
                                                     hide-details="auto"
-                                                    :rules="[rules.required]"
                                                 ></v-text-field>
                                             </v-col>
                                             <v-col cols="2">
@@ -85,7 +83,6 @@
                                                     class="pa-1"
                                                     v-model="order[i-1].quantity"
                                                     hide-details="auto"
-                                                    :rules="[rules.required]"
                                                 ></v-text-field>
                                             </v-col>
                                             <v-col cols="2">
@@ -190,7 +187,9 @@ export default Vue.component('order-modify', {
         requestId(newValue) {
             if(newValue != null) {
                 this.loadStore(newValue);
-                this.order[0].store_id = newValue;
+                for (let i = 0; i < this.order.length; i++) {
+                    this.order[i].store_id = newValue;
+                }
             }
         }
     },
@@ -234,55 +233,35 @@ export default Vue.component('order-modify', {
         },
         createdOrderCheck() {
             console.log(this.order);
-            let count = 0;
+            let data = [];
             for (let i = 0; i < this.order.length; i++) {
-                if (this.order[i].item == '') {
-                    alert('상품명을 입력해 주세요');
-                    return;
-                }
-                else if (this.order[i].color == '') {
-                    alert('색상을 입력해 주세요');
-                    return;
-                }
-                else if (this.order[i].size == '') {
-                    alert('사이즈를 입력해 주세요');
-                    return;
-                }
-                else if (this.order[i].quantity == '') {
-                    alert('수량을 입력해 주세요');
-                    return;
-                }
-                else {
-                    count +=1
+                if (this.order[i].item != '' && this.order[i].item != null) {
+                    data.push(this.order[i])
                 }
             }
-            if (count == this.order.length) {
-                this.flag = true;
-                this.createdOrder();
-            }
+            console.log(data);
+            this.createdOrder(data);
 		},
-        createdOrder() {
-            if (this.flag) {
-                const path = 'http://127.0.0.1:5000/order/create-order'
-                const orderData = this.order
-                const data = axios.post(path, {
-                    data: orderData
-                    }
-                )      
-                data.then((response) => {
-                    console.log(response);
-                    if(response.data) {
-                        alert('주문이 완료되었습니다.');
-                        this.modalClose();
-                    } else {
-                        alert('주문을 넣지 못하였습니다.');
-                        this.modalClose();
-                    }
-                })
-                .catch(err =>{
-                    console.log('err: ' + err);
-                });
-            }
+        createdOrder(test) {
+            const path = 'http://127.0.0.1:5000/order/create-order'
+            const orderData = test
+            const data = axios.post(path, {
+                data: orderData
+                }
+            )      
+            data.then((response) => {
+                console.log(response);
+                if(response.data) {
+                    alert('주문이 완료되었습니다.');
+                    this.modalClose();
+                } else {
+                    alert('주문을 넣지 못하였습니다.');
+                    this.modalClose();
+                }
+            })
+            .catch(err =>{
+                console.log('err: ' + err);
+            });
         },
         loginCheck() {
 			if (isValidJwt()) {
