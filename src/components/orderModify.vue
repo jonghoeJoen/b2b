@@ -5,8 +5,8 @@
         width="1400px"
         v-model="valueData"
         style="overflow-y: scroll"
-        @click:outside="closeModal()"
-        @keydown.esc="closeModal()">
+        @click:outside="modalClose()"
+        @keydown.esc="modalClose()">
         <v-card class="pa-3" style="overflow-y: scroll">
             <v-row dense class="d-flex justify-center">
                 <v-col cols="12">
@@ -24,6 +24,7 @@
                     매장 주소
                 </v-col>
                 <v-col cols="10" class="d-flex justify-start align-center pa-4">
+                    {{store.store_location}}
                 </v-col>
                 <v-col cols="12">
                     <v-divider></v-divider>
