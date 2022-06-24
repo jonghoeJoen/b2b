@@ -185,7 +185,12 @@ export default{
               data: this.dataTable.items,
             })
             .then((response) => {
-                this.item = response.data.data;
+                console.log(response.data);
+                if (response.data === true) {
+                    alert("저장완료");
+                    this.$router.go(0);
+                }
+                else alert("저장실패");
             })
             .catch((error) => {
                 console.log(error);
