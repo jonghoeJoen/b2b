@@ -41,6 +41,11 @@
     color: #4052F9 !important;
 }
 
+.bg-search {
+    height: 150px;
+    background-color: #F9FAFF;
+}
+
 /*
 * width 클래스
 */

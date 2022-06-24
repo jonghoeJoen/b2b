@@ -2,14 +2,14 @@
 	<v-card class="pa-3" rounded flat>
         <v-row>
             <v-col class="col-12">
-                <v-row class="d-flex justify-center">
+                <v-row dense class="d-flex justify-center">
                     <v-col cols="12" md="10" xs="12">
-                        <v-row class="d-flex justify-space-between">
+                        <v-row dense class="d-flex justify-space-between bg-search pa-3">
                             <v-col cols=12 md="6" xs="12" class="d-flex justify-start align-center">
                                 <div class="sign-up-subtitle d-flex align-center">주문내역 리스트</div>
                             </v-col> 
                             <v-col cols=12 md="6" sm="12" class="d-flex justify-center align-center">
-                                <v-row>
+                                <v-row dense>
                                     <v-col cols="12" md="8" sm="12" class="d-flex justify-center align-center">
                                         <span class="ma-0 pa-1 font-size-8" style="font-weight: bold;">조회 기간</span>
                                         <div class="d-flex jusitfy-center align-center w-30">

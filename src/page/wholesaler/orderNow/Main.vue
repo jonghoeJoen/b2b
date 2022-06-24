@@ -4,7 +4,7 @@
             <v-col cols="12">
                 <v-row dense class="d-flex justify-center">
                     <v-col cols="12" md="10" xs="12">
-                        <v-row dense class="d-flex justify-space-between">
+                        <v-row dense class="d-flex justify-space-between bg-search pa-3">
                             <v-col cols=12 md="6" xs="12" class="d-flex justify-start align-center">
                                 <div class="sign-up-subtitle d-flex align-center">주문 현황</div>
                             </v-col> 

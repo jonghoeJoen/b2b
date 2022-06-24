@@ -3,7 +3,7 @@
 		<v-navigation-drawer app v-model="drawer" class="drawer pa-0" style="padding:0px; margin:0px;">
 			<v-list-item to="/">
                 <v-list-item-content>
-					<v-list-item-title style=" backgroud-color:red" class="title">B2B</v-list-item-title>
+					<v-list-item-title style="backgroud-color:red" class="title">B2B</v-list-item-title>
 					<v-list-item-subtitle class="title"></v-list-item-subtitle>
 				</v-list-item-content>
 			</v-list-item>
@@ -14,9 +14,9 @@
                 >
 					<tempalte v-if="userRole === 1">
 						<v-list-item
-						v-for="(item, i) in adminMenus"
-						:key="i"
-						:to="item.href"
+							v-for="(item, i) in adminMenus"
+							:key="i"
+							:to="item.href"
 						>
 						<v-list-item-icon>
 							<v-icon v-text="item.icon"></v-icon>
@@ -28,9 +28,9 @@
 					</tempalte>
 					<tempalte v-if="userRole === 2">
 						<v-list-item
-						v-for="(item, i) in customerMenus"
-						:key="i"
-						:to="item.href"
+							v-for="(item, i) in customerMenus"
+							:key="i"
+							:to="item.href"
 						>
 						<v-list-item-icon>
 							<v-icon v-text="item.icon"></v-icon>
@@ -42,37 +42,38 @@
 					</tempalte>
 					<tempalte v-if="userRole === 3">
 						<v-list-item
-						v-for="(item, i) in sellerMenus"
-						:key="i"
-						:to="item.href"
+							v-for="(item, i) in sellerMenus"
+							:key="i"
+							:to="item.href"
 						>
-						<v-list-item-icon>
-							<v-icon v-text="item.icon"></v-icon>
-						</v-list-item-icon>
-						<v-list-item-content>
-							<v-list-item-title v-text="item.text"></v-list-item-title>
-						</v-list-item-content>
+							<v-list-item-icon>
+								<v-icon v-text="item.icon"></v-icon>
+							</v-list-item-icon>
+							<v-list-item-content>
+								<v-list-item-title v-text="item.text"></v-list-item-title>
+							</v-list-item-content>
 						</v-list-item>
 					</tempalte>
                 </v-list-item-group>
 				<template v-if="userRole === 1">
 					<v-list-group
     					:value="false"
-        				prepend-icon="mdi-account-circle">
+        				prepend-icon="mdi-account-circle"
+						>
 						<template v-slot:activator>
 							<v-list-item-title>관리자페이지</v-list-item-title>
 						</template>
 						<v-list-item
-						v-for="(item, i) in admins"
-						:key="i"
-						:to="item.href"
+							v-for="(item, i) in admins"
+							:key="i"
+							:to="item.href"
 						>
-						<v-list-item-icon>
-							<v-icon v-text="item.icon"></v-icon>
-						</v-list-item-icon>
-						<v-list-item-content>
-							<v-list-item-title v-text="item.text"></v-list-item-title>
-						</v-list-item-content>
+							<v-list-item-icon>
+								<v-icon v-text="item.icon"></v-icon>
+							</v-list-item-icon>
+							<v-list-item-content>
+								<v-list-item-title v-text="item.text"></v-list-item-title>
+							</v-list-item-content>
 						</v-list-item>
 					</v-list-group>
 				</template>
@@ -142,48 +143,48 @@ export default Vue.extend({
             drawer: true,
             customerMenus: [
 				{
-					icon: 'mdi-inbox',
+					icon: 'mdi-format-list-bulleted',
 					text: '도매처 리스트',
 					href: '/wholesaler'
 				},
 				{
-					icon: 'mdi-star',
+					icon: 'mdi-clipboard-text-clock-outline',
 					text: '주문 내역',
 					href: '/orderHistory'
 				},
 			],
 			sellerMenus: [
 				{
-					icon: 'mdi-star',
+					icon: 'mdi-list-status',
 					text: '주문 현황',
 					href: '/orderNow'
 				},
 			],
 			adminMenus: [
 				{
-					icon: 'mdi-inbox',
+					icon: 'mdi-format-list-bulleted',
 					text: '도매처 리스트',
 					href: '/wholesaler'
 				},
 				{
-					icon: 'mdi-star',
+					icon: 'mdi-clipboard-text-clock-outline',
 					text: '주문 내역',
 					href: '/orderHistory'
 				},
 				{
-					icon: 'mdi-star',
+					icon: 'mdi-list-status',
 					text: '주문 현황',
 					href: '/orderNow'
 				},
       		],
 			admins: [
 				{
-					icon: 'mdi-inbox',
+					icon: 'mdi-format-list-bulleted',
 					text: '도매처 리스트',
 					href: 'admin-wholesaler'
 				},
 				{
-					icon: 'mdi-star',
+					icon: 'mdi-clipboard-text-clock-outline',
 					text: '주문 내역',
 					href: 'admin-orderHistory'
 				},
