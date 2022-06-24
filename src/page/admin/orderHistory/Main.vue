@@ -3,46 +3,64 @@
         <v-row>
             <v-col class="col-12">
                 <v-row class="d-flex justify-center">
-                    <v-col cols="10" class="d-flex justify-space-between">
-                        <div class="sign-up-subtitle d-flex align-center">admin 주문내역 리스트</div>
-                        <div class="d-flex justify-center align-center">
-                            조회 기간
-                            <picker-date-picker-component
-                                prepend-inner-icon="mdi-calendar"
-                                dense
-                                outlined
-                                hide-details
-                                v-model="searchData.startTime"
-                            >
-                            </picker-date-picker-component>
-                            ~
-                            <picker-date-picker-component
-                                prepend-inner-icon="mdi-calendar"
-                                dense
-                                outlined
-                                hide-details
-                                v-model="searchData.endTime"
-                            >
-                            </picker-date-picker-component>
-                            <v-text-field
-                                dense
-                                outlined
-                                class="pa-0"
-                                hide-details="auto" 
-                                v-model="searchData.text"  
-                            ></v-text-field>
-                            <v-btn
-                                class="pa-0 btn-black"
-                                @click="submit()"
-                            >검색</v-btn>
-                        </div>
+                    <v-col cols="12" md="10" xs="12">
+                        <v-row class="d-flex justify-space-between">
+                            <v-col cols=12 md="6" xs="12" class="d-flex justify-start align-center">
+                                <div class="sign-up-subtitle d-flex align-center">주문내역 리스트 - admin</div>
+                            </v-col> 
+                            <v-col cols=12 md="6" sm="12" class="d-flex justify-center align-center">
+                                <v-row>
+                                    <v-col cols="12" md="8" sm="12" class="d-flex justify-center align-center">
+                                        <span class="ma-0 pa-1 font-size-8" style="font-weight: bold;">조회 기간</span>
+                                        <div class="d-flex jusitfy-center align-center w-30">
+                                            <picker-date-picker-component
+                                                prepend-inner-icon="mdi-calendar"
+                                                dense
+                                                outlined
+                                                hide-details
+                                                v-model="searchData.startTime"
+                                            >
+                                            </picker-date-picker-component>
+                                            ~
+                                            <picker-date-picker-component
+                                                prepend-inner-icon="mdi-calendar"
+                                                dense
+                                                outlined
+                                                hide-details
+                                                v-model="searchData.endTime"
+                                            >
+                                            </picker-date-picker-component>
+                                        </div>
+                                    </v-col>
+                                    <v-col cols="12" md="4" sm="12" class="d-flex justify-end align-center pl-2">
+                                        <div class="d-flex jusitfy-center align-center w-40">
+                                            <v-text-field
+                                                dense
+                                                outlined
+                                                class="pr-2"
+                                                hide-details="auto" 
+                                                v-model="searchData.text"  
+                                            ></v-text-field>
+                                            <v-btn
+                                                class="pa-0 btn-black"
+                                                @click="submit()"
+                                            >검색</v-btn>
+                                        </div>
+                                    </v-col>
+                                </v-row>
+                            </v-col>   
+                        </v-row>
                     </v-col>
-                    <v-col cols="10">
+                    <v-col cols="12" md="10" xs="12">
                         <data-table-custom-component
                             class="th-center"
                             dense
-                            itemsPerPageHide
+                            download-hide
+                            upload-hide
+                            add-hide
+                            remove-hide
                             countHide
+                            itemsPerPageHide
                             :headers="dataTable.headers"
                             :items="dataTable.items"
                             :totalRows="dataTable.totalRows"
@@ -81,28 +99,28 @@ export default{
             dataTable: {
 				headers : [
                     {
-                        text: '주문일자', sortable: true, value: 'orderDate', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주문일자', value: 'orderDate', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '매장명', sortable: true, value: 'store_name', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장명', value: 'store_name', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '주소', sortable: true, value: 'store_location', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주소', value: 'store_location', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '상품명', sortable: true, value: 'item', align: 'center', cellClass: 'w-10 text-center',
+                        text: '상품명', value: 'item', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '색상', sortable: true, value: 'color', align: 'center', cellClass: 'w-10 text-center',
+                        text: '색상', value: 'color', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '사이즈', sortable: true, value: 'size', align: 'center', cellClass: 'w-10 text-center',
+                        text: '사이즈', value: 'size', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '가능여부', sortable: true, value: 'availableText', align: 'center', cellClass: 'w-10 text-center',
+                        text: '가능여부', value: 'availableText', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '비고', sortable: true, value: 'comment', align: 'center', cellClass: 'w-10 text-center',
+                        text: '비고', value: 'comment', align: 'center', cellClass: 'minw-10 text-center',
                     },
 				],
                 page: 1,

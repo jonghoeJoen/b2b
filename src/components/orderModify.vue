@@ -2,7 +2,8 @@
     <v-dialog
         scrollable
         persistent
-        width="1400px"
+        :max-height="Number.parseInt($vuetify.breakpoint.height * 0.9, 10) < 600 ? Number.parseInt($vuetify.breakpoint.height * 0.9, 10) : 600"
+        :max-width="Number.parseInt($vuetify.breakpoint.width * 0.9, 10) < 1000 ? Number.parseInt($vuetify.breakpoint.width * 0.9, 10) : 1000"
         v-model="valueData"
         style="overflow-y: scroll"
         @click:outside="modalClose()"
@@ -14,16 +15,16 @@
                         <h3>상품 주문</h3>
                     </div>
                 </v-col>
-                <v-col cols="2" class="d-flex justify-center align-center pa-4">
+                <v-col cols="6" md="2" class="d-flex justify-center align-center pa-4">
                     주문 매장
                 </v-col>
-                <v-col cols="10" class="d-flex justify-start align-center pa-4">
+                <v-col cols="6" md="10" class="d-flex justify-start align-center pa-4">
                     {{store.store_name}}
                 </v-col>
-                <v-col cols="2" class="d-flex justify-center align-center pa-4">
+                <v-col cols="6" md="2" class="d-flex justify-center align-center pa-4">
                     매장 주소
                 </v-col>
-                <v-col cols="10" class="d-flex justify-start align-center pa-4">
+                <v-col cols="6" md="10" class="d-flex justify-start align-center pa-4">
                     {{store.store_location}}
                 </v-col>
                 <v-col cols="12">
@@ -45,8 +46,8 @@
                                         </div>
                                     </v-card-title>
                                     <v-card-text class="d-flex justify-center align-center">
-                                        <v-row>
-                                            <v-col cols="4">
+                                        <v-row class="d-flex justify-center align-center">
+                                            <v-col cols="12" md="4">
                                                 <v-text-field
                                                     dense
                                                     outlined
@@ -55,42 +56,38 @@
                                                     hide-details="auto"
                                                 ></v-text-field>
                                             </v-col>
-                                            <v-col cols="2">
+                                            <v-col cols="6" md="2">
                                                 <v-text-field
                                                     dense
                                                     outlined
                                                     label="색상"
-                                                    class="pa-1"
                                                     v-model="order[i-1].color"
                                                     hide-details="auto"
                                                 ></v-text-field>
                                             </v-col>
-                                            <v-col cols="2">
+                                            <v-col cols="6" md="2">
                                                 <v-text-field
                                                     dense
                                                     outlined
                                                     label="사이즈"
-                                                    class="pa-1"
                                                     v-model="order[i-1].size"
                                                     hide-details="auto"
                                                 ></v-text-field>
                                             </v-col>
-                                            <v-col cols="2">
+                                            <v-col cols="6" md="2">
                                                 <v-text-field
                                                     dense
                                                     outlined
                                                     label="수량"
-                                                    class="pa-1"
                                                     v-model="order[i-1].quantity"
                                                     hide-details="auto"
                                                 ></v-text-field>
                                             </v-col>
-                                            <v-col cols="2">
+                                            <v-col cols="6" md="2">
                                                 <v-text-field
                                                     dense
                                                     outlined
                                                     label="비고"
-                                                    class="pa-1"
                                                     v-model="order[i-1].comment"
                                                     hide-details="auto"
                                                 ></v-text-field>
@@ -138,22 +135,22 @@ export default Vue.component('order-modify', {
             dataTable: {
 				headers : [
                     {
-                        text: '번호', sortable: true, value: 'id', align: 'center', cellClass: 'w-10 text-center',
+                        text: '번호', sortable: true, value: 'id', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '매장명', sortable: true, value: 'storeName', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장명', sortable: true, value: 'storeName', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '매장 휴대전화', sortable: true, value: 'phone1', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장 휴대전화', sortable: true, value: 'phone1', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '매장 유선번호', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장 유선번호', sortable: true, value: 'phone2', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '주문하기', sortable: true, value: 'phone2', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주문하기', sortable: true, value: 'phone2', align: 'center', cellClass: 'minw-10 text-center',
                     },
 				],
                 page: 1,
@@ -202,7 +199,7 @@ export default Vue.component('order-modify', {
             this.$emit('update:requestId', null);
         },
         async dialogChange(data) {
-            console.log(data);
+            ;
         },
         addNumber() {
             const orderAdd = { item: '', user_id: this.userId ,store_id: this.requestId , color: '', size: '', quantity: null, comment: '' };
@@ -239,7 +236,7 @@ export default Vue.component('order-modify', {
                     data.push(this.order[i])
                 }
             }
-            console.log(data);
+            ;
             this.createdOrder(data);
 		},
         createdOrder(test) {
@@ -270,7 +267,7 @@ export default Vue.component('order-modify', {
                 for (let i = 0; i < this.order.length; i++) {
                     this.order[i].user_id = this.userId;
                 }
-				console.log(data)
+				
 			} else {
 				// console.log(isValidJwt())
 				// 로그인페이지로 이동

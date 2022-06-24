@@ -38,8 +38,12 @@
                         <data-table-custom-component
                             class="th-center"
                             dense
-                            itemsPerPageHide
+                            download-hide
+                            upload-hide
+                            add-hide
+                            remove-hide
                             countHide
+                            itemsPerPageHide
                             :headers="dataTable.headers"
                             :items="dataTable.items"
                             :totalRows="dataTable.totalRows"
@@ -90,22 +94,22 @@ export default Vue.component('new-account', {
             dataTable: {
 				headers : [
                     {
-                        text: '번호', sortable: true, value: 'id', align: 'center', cellClass: 'w-10 text-center',
+                        text: '번호', sortable: true, value: 'id', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '매장명', sortable: true, value: 'store_name', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장명', sortable: true, value: 'store_name', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'w-10 text-center',
+                        text: '주소', sortable: true, value: 'postcode', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '매장 휴대전화', sortable: true, value: 'phone_no', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장 휴대전화', sortable: true, value: 'phone_no', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '매장 유선번호', sortable: true, value: 'mobile_no', align: 'center', cellClass: 'w-10 text-center',
+                        text: '매장 유선번호', sortable: true, value: 'mobile_no', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '주문하기', value: 'order', align: 'center', cellClass: 'w-10 text-center', type: 'multiButton',
+                        text: '주문하기', value: 'order', align: 'center', cellClass: 'minw-10 text-center', type: 'multiButton',
                     },
 				],
 				items: [],                
@@ -155,7 +159,7 @@ export default Vue.component('new-account', {
             this.$emit('update:requestId', null);
         },
         async dialogChange(data) {
-            console.log(data);
+            ;
         },
         async submit() {
             this.dataTable.loading = true;

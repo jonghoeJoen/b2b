@@ -199,7 +199,7 @@
                                 >{{cell[header.type][header.value].title}}</v-icon>
                             </template>
                             <template v-else-if="header.type === 'autocomplete'">
-                                <v-autocomplete
+                                <v-select
                                     v-model="item[header.value]"
                                     dense
                                     outlined
@@ -207,7 +207,7 @@
                                     :items="cell[header.type][header.value].items"
                                     @click.stop
                                     @change="changeAutocomplete($event, header.value, item)"
-                                ></v-autocomplete>
+                                ></v-select>
                             </template>
                             <template v-else-if="header.type === 'button'">
                                 <v-btn

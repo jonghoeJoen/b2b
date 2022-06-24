@@ -16,7 +16,7 @@
 						<v-list-item
 						v-for="(item, i) in adminMenus"
 						:key="i"
-						:href="item.href"
+						:to="item.href"
 						>
 						<v-list-item-icon>
 							<v-icon v-text="item.icon"></v-icon>
@@ -30,7 +30,7 @@
 						<v-list-item
 						v-for="(item, i) in customerMenus"
 						:key="i"
-						:href="item.href"
+						:to="item.href"
 						>
 						<v-list-item-icon>
 							<v-icon v-text="item.icon"></v-icon>
@@ -44,7 +44,7 @@
 						<v-list-item
 						v-for="(item, i) in sellerMenus"
 						:key="i"
-						:href="item.href"
+						:to="item.href"
 						>
 						<v-list-item-icon>
 							<v-icon v-text="item.icon"></v-icon>
@@ -65,7 +65,7 @@
 						<v-list-item
 						v-for="(item, i) in admins"
 						:key="i"
-						:href="item.href"
+						:to="item.href"
 						>
 						<v-list-item-icon>
 							<v-icon v-text="item.icon"></v-icon>
