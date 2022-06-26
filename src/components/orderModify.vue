@@ -33,16 +33,16 @@
                 <v-col cols="12">
                     <template v-for="i in order.length">
                         <v-row :key="i" class="ma-1">
-                            <v-col cols="2" class="d-flex justify-center align-center pa-4 text--order">
+                            <v-col cols="12" md="2" class="d-flex justify-center align-center pa-4 text--order">
                                 주문 {{ i }}
                             </v-col>
-                            <v-col cols="10" class="d-flex justify-center pa-0">
+                            <v-col cols="12" md="10" class="d-flex justify-center pa-0">
                                 <v-card>
                                     <v-card-title class="d-flex justify-end py-0">
                                         <div>
-                                            <v-btn @click="minNumber(i)" x-small>
-                                                X
-                                            </v-btn>
+                                            <v-icon @click="minNumber(i)">
+                                                mdi-close
+                                            </v-icon>
                                         </div>
                                     </v-card-title>
                                     <v-card-text class="d-flex justify-center align-center">
@@ -100,11 +100,23 @@
                     </template>
                 </v-col>
                 <v-col cols="12" class="d-flex justify-end">
-                    <v-btn @click="addNumber()">+ 주문추가</v-btn>
+                    <v-btn @click="addNumber()">
+                        <v-icon
+                            small
+                            dark
+                        >
+                            mdi-plus-circle-outline
+                        </v-icon>
+                        주문추가
+                    </v-btn>
                 </v-col>
                 <v-col cols="10">
                     <div class="d-flex justify-center">
-                        <v-btn @click="createdOrderCheck()">주문 완료</v-btn>
+                        <v-btn
+                            large
+                            class="btn-order minw-20" 
+                            @click="createdOrderCheck()">
+                        주문 완료</v-btn>
                     </div>
                 </v-col>
             </v-row>

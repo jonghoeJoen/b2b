@@ -54,7 +54,13 @@
                         <div style="width:100%; display:flex; justify-content: end;">
                             <v-btn 
                                 @click="dialogChange()">
-                                + 새 거래처 등록
+                                <v-icon
+                                    small
+                                    dark
+                                >
+                                    mdi-plus-circle-outline
+                                </v-icon>
+                                새 거래처 등록
                             </v-btn>
                         </div>
                     </v-col>
@@ -64,21 +70,27 @@
         <new-account
             :value.sync="dialog.accountValue"
         ></new-account>
-        <order-modify
+        <!-- <order-modify
             :value.sync="dialog.orderValue"
             :requestId.sync="dialog.requestId"
-        ></order-modify>
+        ></order-modify> -->
+        <check-order
+            :value.sync="dialog.orderValue"
+            :requestId.sync="dialog.requestId"
+        >
+        </check-order>
     </v-card>
 </template>
 <script>
 import Vue from 'vue';
 import axios from 'axios';
 import newAccount from '../../../components/newAccount.vue';
-import OrderModify from '../../../components/orderModify.vue';
+// import OrderModify from '../../../components/orderModify.vue';
+import CheckOrder from '../../../components/checkOrder.vue';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import isValidJwt from '@/utils';
 export default {
-  components: { newAccount, OrderModify},
+  components: { newAccount, CheckOrder},
 	data(){
 		return {
             DataTableCustom,
@@ -91,6 +103,9 @@ export default {
                     // {
                     //     text: '번호', value: 'id', align: 'center', cellClass: 'minw-10 text-center',
                     // },
+                    {
+                        text: '건물명', value: 'building_num', align: 'center', cellClass: 'minw-10 text-center',
+                    },
                     {
                         text: '매장명', value: 'store_name', align: 'center', cellClass: 'minw-10 text-center',
                     },
@@ -118,8 +133,8 @@ export default {
                             buttonList: [
                                 {
                                     color: 'view',
-                                    contentClass: 'elevation-1 btn-order',
-                                    title: '주문하기',
+                                    contentClass: 'elevation-1 rounded-sm btn-black',
+                                    title: '주문현황',
                                 },
                             ]
                         },
@@ -130,6 +145,7 @@ export default {
                 accountValue: false,
                 requestId: null,
                 orderValue: false,
+                testValue:false,
             },
             item: [],
             page: 1,
@@ -149,13 +165,11 @@ export default {
         dialogChange() {
             this.dialog.accountValue = true;
         },
-        order(data) {
-            this.dialog.orderValue = true;
-            ;
-        },
         clickMultiButton(data) {
             ;
             if(data.header == 'order') {
+                console.log('order')
+                console.log(data);
                 this.dialog.requestId = data.item.id;
                 this.dialog.orderValue = true; 
             } else if (data.header == 'favorAdd') {

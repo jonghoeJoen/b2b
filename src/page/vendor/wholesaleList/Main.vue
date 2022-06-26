@@ -39,6 +39,19 @@
                                 <div class="sign-up-subtitle">도매처 리스트</div>
                             </v-col>
                             <v-col cols="12" md="8" sm="12" class="d-flex justify-end align-center pl-2">
+                                <div>
+                                    <v-select
+                                        dense
+                                        outlined
+                                        autocomplete="on"
+                                        type="text"
+                                        hide-details="auto"
+                                        :items="building.items"
+                                        v-model="searchData.buildingNum"
+                                        item-text="name"
+                                        item-value="id"
+                                    ></v-select>
+                                </div>
                                 <div class="d-flex jusitfy-center align-center w-40">
                                     <v-text-field
                                         dense
@@ -84,7 +97,13 @@
                         <div style="width:100%; display:flex; justify-content: end;">
                             <v-btn 
                                 @click="dialogChange()">
-                                + 새 거래처 등록
+                                <v-icon
+                                    small
+                                    dark
+                                >
+                                    mdi-plus-circle-outline
+                                </v-icon>
+                                새 거래처 등록
                             </v-btn>
                         </div>
                     </v-col>
@@ -120,6 +139,9 @@ export default {
 				headers : [
                     {
                         text: '번호', value: 'id', align: 'center', cellClass: 'minw-10 text-center',
+                    },
+                    {
+                        text: '건물명', value: 'name', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
                         text: '매장명', value: 'store_name', align: 'center', cellClass: 'minw-10 text-center',
@@ -172,6 +194,9 @@ export default {
 				headers : [
                     {
                         text: '매장명', value: 'store_name', align: 'center', cellClass: 'minw-10 text-center',
+                    },
+                    {
+                        text: '건물명', value: 'name', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
                         text: '주소', value: 'store_location', align: 'center', cellClass: 'minw-10 text-center',
@@ -230,7 +255,14 @@ export default {
                 endTime: '',
                 text: '',
                 storeId: '',
+                buildingNum: '',
             },
+            buildingSearchData: {
+                parent_id: '1',
+            },
+            building: {
+                items: [],
+            }
 		};
 	},
 	methods: {
@@ -245,7 +277,6 @@ export default {
             ;
         },
         clickMultiButton(data) {
-            ;
             if(data.header == 'order') {
                 this.dialog.requestId = data.item.id;
                 this.dialog.orderValue = true; 
@@ -271,6 +302,7 @@ export default {
               data: {...this.searchData, page: this.page},
             })
             .then((response) => {
+                console.log(response)
                 this.item = response.data.data;
             })
             .catch((error) => {
@@ -298,7 +330,6 @@ export default {
             this.$router.go(0);
         },
 		async delFavor(data) {
-            
             this.dataTableFavorites.loading = true;
             axios("http://127.0.0.1:5000/favor/delete", {
               method: "post",
@@ -339,6 +370,20 @@ export default {
 				}).catch(error => {})
 			}
 		},
+        loadCodeList() {
+            console.log(this.searchData)
+            axios("http://127.0.0.1:5000/code/get-all", {
+                method: "post",
+                data: this.buildingSearchData,
+            })
+            .then((response) => {
+                console.log(response);
+                this.building.items = response.data.data
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        },
 	},
 	mounted() {
         this.loadStore();
@@ -357,10 +402,18 @@ export default {
                 this.loadStore();
             },
             deep: true
+        },
+        'searchData.buildingNum': {
+            handler(n) {
+                console.log(this.searchData.buildingNum);
+            },
+            deep: true,
         }
+        
     },
     created() {
         this.loginCheck();
+        this.loadCodeList();
     }
 }
 </script>
