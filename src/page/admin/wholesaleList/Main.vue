@@ -9,7 +9,7 @@
                                 <div class="sign-up-subtitle">도매처 리스트 - admin</div>
                             </v-col>
                             <v-col cols="12" md="8" sm="12" class="d-flex justify-end align-center pl-2">
-                                <div class="d-flex jusitfy-center align-center w-40">
+                                <div class="d-flex jusitfy-center align-center" style="width:100%">
                                     <v-text-field
                                         dense
                                         outlined
