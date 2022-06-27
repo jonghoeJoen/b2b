@@ -165,7 +165,7 @@ export default {
 				items: [],
                 loading: false,
                 page: 1,
-                itemsPerPage: 10,
+                itemsPerPage: 20,
                 totalRows: 10,
                 cell: {
                     multiButton: {
@@ -217,7 +217,7 @@ export default {
 				items: [],
                 loading: false,
                 page: 1,
-                itemsPerPage: 10,
+                itemsPerPage: 20,
                 totalRows: 10,
                 cell: {
                     multiButton: {
@@ -289,29 +289,32 @@ export default {
                     }
                 }
                 let userData = { userId : this.searchData.userId, storeId: String(data.item.id)}
-                this.creatdFavor(userData);
+                this.createFavor(userData);
             } else if (data.header == 'favorDel') {
                 let userData = { userId : this.searchData.userId, storeId: String(data.item.id)}
                 this.delFavor(userData);
             }
         },
 		async loadStore() {
+            let totalRows = 0;
             this.dataTable.loading = true;
             axios("/shop/get-all", {
               method: "post",
               data: {...this.searchData, page: this.page},
             })
             .then((response) => {
+                console.log(response.data.total_pages)
+                this.dataTable.totalRows = response.data.total_pages;
+                this.dataTable.loading = false;
+                this.searchData.startTime = '';
+                this.searchData.endTime = '';
+                this.searchData.text = '';
                 this.item = response.data.data;
             })
             .catch((error) => {
             });
-            this.dataTable.loading = false;
-            this.searchData.startTime = '';
-            this.searchData.endTime = '';
-            this.searchData.text = '';
         },
-		async creatdFavor(data) {
+		async createFavor(data) {
             this.dataTableFavorites.loading = true;
             axios("/favor/create", {
               method: "post",
