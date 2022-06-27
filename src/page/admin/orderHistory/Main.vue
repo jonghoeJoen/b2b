@@ -3,15 +3,17 @@
         <v-row>
             <v-col class="col-12">
                 <v-row dense class="d-flex justify-center">
-                    <v-col cols="12" md="10" xs="12">
-                        <v-row dense class="d-flex justify-space-between bg-search pa-3">
-                            <v-col cols=12 md="6" xs="12" class="d-flex justify-start align-center">
-                                <div class="sign-up-subtitle d-flex align-center">주문내역 리스트 - admin</div>
-                            </v-col> 
-                            <v-col cols=12 md="6" sm="12" class="d-flex justify-center align-center">
+                    <v-col cols="12" md="10" xs="12" class="pa-3">
+                        <v-row dense class="d-flex justify-space-between bg-search">
+                            <v-col cols=12 md="6" xs="12" class="d-flex justify-start align-center pa-3">
+                                <div class="sign-up-subtitle d-flex align-center pa-3">주문내역 리스트 - admin</div>
+                            </v-col>
+                            <v-col cols=12 md="6" sm="12" class="d-flex justify-center align-center pa-3">
                                 <v-row dense>
-                                    <v-col cols="12" md="8" sm="12" class="d-flex justify-center align-center">
+                                    <v-col cols="3" md="2" sm="3" class="d-flex justify-center align-center">
                                         <span class="ma-0 pa-1 font-size-8" style="font-weight: bold;">조회 기간</span>
+                                    </v-col>
+                                    <v-col cols="9" md="6" sm="9" class="d-flex justify-center align-center">
                                         <div class="d-flex jusitfy-center align-center w-30">
                                             <picker-date-picker-component
                                                 prepend-inner-icon="mdi-calendar"
@@ -33,7 +35,7 @@
                                         </div>
                                     </v-col>
                                     <v-col cols="12" md="4" sm="12" class="d-flex justify-end align-center pl-2">
-                                        <div class="d-flex jusitfy-center align-center w-40">
+                                        <div class="d-flex jusitfy-center align-center" style="width:100%">
                                             <v-text-field
                                                 dense
                                                 outlined

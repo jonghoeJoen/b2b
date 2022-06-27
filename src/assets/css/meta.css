@@ -49,6 +49,7 @@ html, body {
 }
 
 .bg-search {
+    min-height: 150px;
     background-color: #F9FAFF;
 }
 
