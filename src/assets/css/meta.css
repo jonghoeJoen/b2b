@@ -49,7 +49,6 @@ html, body {
 }
 
 .bg-search {
-    height: 150px;
     background-color: #F9FAFF;
 }
 
@@ -467,6 +466,9 @@ html, body {
 /*
 * 반응형 폰트 크기
 */
+.v-text-field__slot {
+    font-size: 0.5rem !important;
+}
 .font-size-8 {
     font-size: 0.5rem !important;
 }
@@ -696,6 +698,10 @@ html, body {
 }
 
 @media ( min-width : 414px) {
+    .v-text-field__slot {
+        font-size: calc(0.5rem + ((( 100vw - 20rem)/(90 -20)))*(0.5*2- 0.5))
+            !important;
+    }
     .font-size-8 {
         font-size: calc(0.5rem + ((( 100vw - 20rem)/(90 -20)))*(0.5*2- 0.5))
             !important;
@@ -927,6 +933,9 @@ html, body {
 }
 
 @media ( min-width : 1440px) {
+    .v-text-field__slot {
+        font-size: 1.0rem !important;
+    }
     .font-size-8 {
         font-size: 1.0rem !important;
     }
