@@ -7,7 +7,7 @@
                         <v-row dense class="d-flex justify-space-between bg-search pa-3">
                             <v-col cols=12 md="6" xs="12" class="d-flex justify-start align-center">
                                 <div class="sign-up-subtitle d-flex align-center">주문내역 리스트</div>
-                            </v-col> 
+                            </v-col>
                             <v-col cols=12 md="6" sm="12" class="d-flex justify-center align-center">
                                 <v-row dense>
                                     <v-col cols="12" md="8" sm="12" class="d-flex justify-center align-center">
@@ -48,7 +48,16 @@
                                         </div>
                                     </v-col>
                                 </v-row>
-                            </v-col>   
+                            </v-col>
+                            <v-col cols=12 class="d-flex justify-start align-center">
+                                <div class="d-flex align-center"> 
+                                    <span class="d-flex align-center mr-3" style="font-size: 12px;">도매처 url 복사</span>
+                                    <v-btn
+                                    x-small
+                                    @click="copyUrl()"
+                                    >복사하기</v-btn>
+                                </div>
+                            </v-col> 
                         </v-row>
                     </v-col>
                     <v-col cols="12" md="10" xs="12">
@@ -82,11 +91,18 @@
     </v-card>
 </template>
 <script>
+
+import Vue from "vue";
 import axios from 'axios';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import moment from 'moment';
 import isValidJwt from '@/utils';
+import VueClipboard from 'vue-clipboard2';
+import store from '@/store'
+
+Vue.use(VueClipboard)
+
 export default{
 	data(){
 		return {
@@ -142,9 +158,29 @@ export default{
 		};
 	},
 	methods: {
+        copyUrl() {
+            console.log(window.location.protocol + "//" + window.location.host + "/orderNow?customer=" + store.getters['GET_USER_ROLE']);
+            let url = window.location.protocol + "//" + window.location.host + "/orderNow?customer=" + store.getters['GET_USER_ROLE'];
+            this.$copyText(url).then(function(e) {
+                alert('복사 완료');
+            }, function (e) {
+                alert('복사 실패');
+            })
+        },
 		async submit() {
+            // this.dataTable.loading = true;
+            // axios("http://127.0.0.1:5000/order/get-all", {
+            //   method: "post",
+            //   data: {...this.searchData, page: this.page},
+            // })
+            // .then((response) => {
+            //     this.item = response.data.data;
+            // })
+            // .catch((error) => {
+            //     console.log(error);
+            // });
             this.dataTable.loading = true;
-            axios("http://127.0.0.1:5000/order/get-all", {
+            axios("/order/get-all", {
               method: "post",
               data: {...this.searchData, page: this.page},
             })
