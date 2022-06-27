@@ -184,7 +184,7 @@ export default Vue.component('check-order', {
         },
         loadOrder() {
             this.dataTable.loading = true;
-            axios("http://127.0.0.1:5000/order/get-all", {
+            axios("/order/get-all", {
                 method: "post",
                 data: {...this.searchData, page: this.page},
             })
@@ -203,7 +203,7 @@ export default Vue.component('check-order', {
         loadStore(data) {
             let str = data.toString();
             let test = { id: str };
-            axios("http://127.0.0.1:5000/shop/load", {
+            axios("/shop/load", {
                 method: "post",
                 data: test,
             })

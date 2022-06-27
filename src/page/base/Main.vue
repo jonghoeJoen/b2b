@@ -191,6 +191,7 @@ export default Vue.extend({
       		],
 			username: null,
 			userRole: null,
+			userId: null,
         };
     },
     watch: {
@@ -203,7 +204,9 @@ export default Vue.extend({
 				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
 				this.username = data.username;
 				this.userRole = data.role;
-				store.commit('SET_ROLE', this.userRole);
+				this.userId = data.userId;
+				store.commit('SET_USER_ROLE', this.userRole);
+				store.commit('SET_USER_ID', this.userId);
 			} else {
 				// console.log(isValidJwt())
 				// 로그인페이지로 이동

@@ -229,7 +229,7 @@ export default Vue.component('order-modify', {
         loadStore(data) {
             let str = data.toString();
             let test = { id: str };
-            axios("http://127.0.0.1:5000/shop/load", {
+            axios("/shop/load", {
               method: "post",
               data: test,
             })
@@ -252,7 +252,7 @@ export default Vue.component('order-modify', {
             this.createdOrder(data);
 		},
         createdOrder(test) {
-            const path = 'http://127.0.0.1:5000/order/create-order'
+            const path = '/order/create-order'
             const orderData = test
             const data = axios.post(path, {
                 data: orderData

@@ -228,7 +228,7 @@ export default Vue.extend({
             const validate = this.$refs.form.validate();
             if (validate === false) return;
             if (this.data.roleId == 2) {
-                axios("http://localhost:5000/user/customer-sign-up", {
+                axios("/user/customer-sign-up", {
                 method: "post",
                 data: this.data,
                 })

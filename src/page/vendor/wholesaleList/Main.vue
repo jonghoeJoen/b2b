@@ -297,7 +297,7 @@ export default {
         },
 		async loadStore() {
             this.dataTable.loading = true;
-            axios("http://127.0.0.1:5000/shop/get-all", {
+            axios("/shop/get-all", {
               method: "post",
               data: {...this.searchData, page: this.page},
             })
@@ -331,7 +331,7 @@ export default {
         },
 		async delFavor(data) {
             this.dataTableFavorites.loading = true;
-            axios("http://127.0.0.1:5000/favor/delete", {
+            axios("/favor/delete", {
               method: "post",
               data: data,
             })
@@ -372,7 +372,7 @@ export default {
 		},
         loadCodeList() {
             console.log(this.searchData)
-            axios("http://127.0.0.1:5000/code/get-all", {
+            axios("/code/get-all", {
                 method: "post",
                 data: this.buildingSearchData,
             })

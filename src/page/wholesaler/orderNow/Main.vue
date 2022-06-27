@@ -105,11 +105,17 @@ export default{
                         text: '주문일자', value: 'orderDate', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '매장명', value: 'store_name', align: 'center', cellClass: 'minw-10 text-center',
+                        text: '주문고객', value: 'user_name', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '주소', value: 'store_location', align: 'center', cellClass: 'minw-10 text-center',
+                        text: '연락처', value: 'user_mobile_no', align: 'center', cellClass: 'minw-10 text-center',
                     },
+                    // {
+                    //     text: '매장명', value: 'store_name', align: 'center', cellClass: 'minw-10 text-center',
+                    // },
+                    // {
+                    //     text: '주소', value: 'store_location', align: 'center', cellClass: 'minw-10 text-center',
+                    // },
                     {
                         text: '상품명', value: 'item', align: 'center', cellClass: 'minw-20 text-center',
                     },
@@ -162,7 +168,7 @@ export default{
         },
 		async submit() {
             this.dataTable.loading = true;
-            axios("http://127.0.0.1:5000/order/get-all", {
+            axios("/order/get-all", {
               method: "post",
               data: {...this.searchData, page: this.page},
             })
@@ -215,6 +221,8 @@ export default{
 		},
 	},
 	mounted() {
+        this.searchData.userId = this.$route.query.customer ? this.$route.query.customer : null;
+        console.log(this.searchData);
         this.loginCheck();
 	},
     watch: {

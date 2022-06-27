@@ -5,14 +5,18 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    userId: null,
     userRole: null,
-
   },
   getters: {
-    GET_ROLE: (state) => state.userRole,
+    GET_USER_ID: (state) => state.userId,
+    GET_USER_ROLE: (state) => state.userRole,
   },
   mutations: {
-    SET_ROLE(state, payload) {
+    SET_USER_ID(state, payload) {
+      state.userId = payload;
+    },
+    SET_USER_ROLE(state, payload) {
       state.userRole = payload;
     },
   },

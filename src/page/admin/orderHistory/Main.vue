@@ -143,7 +143,7 @@ export default{
 	methods: {
 		async submit() {
             this.dataTable.loading = true;
-            axios("http://127.0.0.1:5000/order/get-all", {
+            axios("/order/get-all", {
                 method: "post",
                 data: {...this.searchData, page: this.page},
             })

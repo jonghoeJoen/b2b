@@ -250,7 +250,7 @@ export default Vue.component('new-account', {
             this.createStore();
         },
         createStore() {
-            axios("http://127.0.0.1:5000/shop/create-store", {
+            axios("/shop/create-store", {
                 method: "post",
                 data: this.data,
             })
