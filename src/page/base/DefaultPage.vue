@@ -13,9 +13,18 @@ export default{
 	},
 	mounted() {
 		if (store.getters['GET_USER_ROLE'] == 3) {
-			this.$router.push({
-				path: '/orderNow'
-			}).catch(error => {});
+			let returnURL = store.getters['GET_URL_BEFORE_LOGIN'];
+			console.log(returnURL);
+			store.commit('SET_URL_BEFORE_LOGIN', null);
+			if (returnURL) {
+				this.$router.push({
+					path: returnURL
+				}).catch(error => {});
+			} else {
+				this.$router.push({
+					path: '/orderNow'
+				}).catch(error => {});
+			}
 		} else {
 			this.$router.push({
 				path: '/wholesaler'

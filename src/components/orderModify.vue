@@ -237,11 +237,9 @@ export default Vue.component('order-modify', {
                 this.store = response.data.data[0];
             })
             .catch((error) => {
-                console.log(error);
             });
         },
         createdOrderCheck() {
-            console.log(this.order);
             let data = [];
             for (let i = 0; i < this.order.length; i++) {
                 if (this.order[i].item != '' && this.order[i].item != null) {
@@ -259,7 +257,6 @@ export default Vue.component('order-modify', {
                 }
             )      
             data.then((response) => {
-                console.log(response);
                 if(response.data) {
                     alert('주문이 완료되었습니다.');
                     this.modalClose();
@@ -269,25 +266,8 @@ export default Vue.component('order-modify', {
                 }
             })
             .catch(err =>{
-                console.log('err: ' + err);
             });
         },
-        loginCheck() {
-			if (isValidJwt()) {
-				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
-                this.userId = String(data.userId);
-                for (let i = 0; i < this.order.length; i++) {
-                    this.order[i].user_id = this.userId;
-                }
-				
-			} else {
-				// console.log(isValidJwt())
-				// 로그인페이지로 이동
-				this.$router.push({
-					path: '/sign-in'
-				}).catch(error => {})
-			}
-		},
         modalClose() {
             this.clean();
             this.valueData = false;
@@ -297,13 +277,14 @@ export default Vue.component('order-modify', {
             for (let i = 0; i < this.order.length; i++) {
                 this.order[i] = { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' };
             }
-            this.loginCheck();
         }
     },
     mounted() {
+        for (let i = 0; i < this.order.length; i++) {
+            this.order[i].user_id = this.$store.getters['GET_USER_ID'];
+        }
     },
     created() {
-        this.loginCheck();
     },
 });
 </script>

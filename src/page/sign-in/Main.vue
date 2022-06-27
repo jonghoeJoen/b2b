@@ -52,6 +52,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import axios from 'axios'
+import store from '@/store'
 
 export default Vue.extend({
     data() {
@@ -69,7 +70,7 @@ export default Vue.extend({
     },
     methods: {
         async login() {
-            let path = "http://127.0.0.1:5000/login/login";
+            let path = "/login/login";
                 axios.post(path, {
                     username: this.data.username,
                     password: this.data.password
@@ -82,6 +83,8 @@ export default Vue.extend({
         },
     },
     mounted() {
+        let returnURL = store.getters['GET_URL_BEFORE_LOGIN'];
+			console.log(returnURL);
     },
     created() {
     },

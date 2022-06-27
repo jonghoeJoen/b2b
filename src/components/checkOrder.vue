@@ -155,7 +155,6 @@ export default Vue.component('check-order', {
                         e.availableText = '품절'
                     }
                 })
-                console.log(n);
                 this.dataTable.items = n;
             },
             deep: true
@@ -189,11 +188,9 @@ export default Vue.component('check-order', {
                 data: {...this.searchData, page: this.page},
             })
             .then((response) => {
-                console.log(response)
                 this.item = response.data.data;
             })
             .catch((error) => {
-                console.log(error);
             });
             this.dataTable.loading = false;
             this.searchData.startTime = '';
@@ -211,22 +208,8 @@ export default Vue.component('check-order', {
                 this.store = response.data.data[0];
             })
             .catch((error) => {
-                console.log(error);
             });
         },
-        loginCheck() {
-			if (isValidJwt()) {
-				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
-                this.userId = String(data.userId);
-				
-			} else {
-				// console.log(isValidJwt())
-				// 로그인페이지로 이동
-				this.$router.push({
-					path: '/sign-in'
-				}).catch(error => {})
-			}
-		},
         modalClose() {
             this.valueData = false;
             this.$emit('update:value', false);
@@ -236,16 +219,15 @@ export default Vue.component('check-order', {
             for (let i = 0; i < this.order.length; i++) {
                 this.order[i] = { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' };
             }
-            this.loginCheck();
         },
         tablePage(page) {
             this.page = page;
         },
     },
     mounted() {
+        this.searchData.userId = this.$store.getters['GET_USER_ID'];
     },
     created() {
-        this.loginCheck();
     },
 });
 </script>

@@ -151,7 +151,6 @@ export default{
                 this.item = response.data.data;
             })
             .catch((error) => {
-                console.log(error);
             });
             this.dataTable.loading = false;
             this.searchData.startTime = '';

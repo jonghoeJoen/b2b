@@ -89,6 +89,7 @@ import newAccount from '../../../components/newAccount.vue';
 import CheckOrder from '../../../components/checkOrder.vue';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import isValidJwt from '@/utils';
+
 export default {
   components: { newAccount, CheckOrder},
 	data(){
@@ -155,6 +156,7 @@ export default {
                 endTime: '',
                 text: '',
                 storeId: '',
+                buildingNum: '',
             },
 		};
 	},
@@ -168,8 +170,6 @@ export default {
         clickMultiButton(data) {
             ;
             if(data.header == 'order') {
-                console.log('order')
-                console.log(data);
                 this.dialog.requestId = data.item.id;
                 this.dialog.orderValue = true; 
             } else if (data.header == 'favorAdd') {
@@ -198,26 +198,16 @@ export default {
                 this.item = response.data.data;
             })
             .catch((error) => {
-                console.log(error);
             });
             this.dataTable.loading = false;
             this.searchData.startTime = '';
             this.searchData.endTime = '';
             this.searchData.text = '';
         },
-        loginCheck() {
-			if (isValidJwt()) {
-				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
-                this.searchData.userId = String(data.userId);
-				
-			} else {
-				this.$router.push({
-					path: '/sign-in'
-				}).catch(error => {})
-			}
-		},
 	},
 	mounted() {
+        this.searchData.userId = this.$store.getters['GET_USER_ID'];
+        // this.searchData.storeId = store.getters['GET_STORE_ID'];
         this.loadStore();
     },
     watch: {
@@ -236,7 +226,6 @@ export default {
         }
     },
     created() {
-        this.loginCheck();
     }
 }
 </script>

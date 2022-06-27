@@ -5,7 +5,6 @@ export const EventBus = new Vue()
 export function isValidJwt() {
 
     let jwt = localStorage.token
-    console.log(jwt)
     if (!jwt || jwt.split('.').length < 3) {
         return false
     }

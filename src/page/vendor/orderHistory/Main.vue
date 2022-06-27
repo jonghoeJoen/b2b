@@ -159,7 +159,6 @@ export default{
 	},
 	methods: {
         copyUrl() {
-            console.log(window.location.protocol + "//" + window.location.host + "/orderNow?customer=" + store.getters['GET_USER_ROLE']);
             let url = window.location.protocol + "//" + window.location.host + "/orderNow?customer=" + store.getters['GET_USER_ROLE'];
             this.$copyText(url).then(function(e) {
                 alert('복사 완료');
@@ -168,17 +167,6 @@ export default{
             })
         },
 		async submit() {
-            // this.dataTable.loading = true;
-            // axios("http://127.0.0.1:5000/order/get-all", {
-            //   method: "post",
-            //   data: {...this.searchData, page: this.page},
-            // })
-            // .then((response) => {
-            //     this.item = response.data.data;
-            // })
-            // .catch((error) => {
-            //     console.log(error);
-            // });
             this.dataTable.loading = true;
             axios("/order/get-all", {
               method: "post",
@@ -188,35 +176,21 @@ export default{
                 this.item = response.data.data;
             })
             .catch((error) => {
-                console.log(error);
             });
             this.dataTable.loading = false;
             this.searchData.startTime = '';
             this.searchData.endTime = '';
             this.searchData.text = '';
         },
-        loginCheck() {
-			if (isValidJwt()) {
-				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
-                this.searchData.userId = String(data.userId);
-				
-			} else {
-				// console.log(isValidJwt())
-				// 로그인페이지로 이동
-				this.$router.push({
-					path: '/sign-in'
-				}).catch(error => {})
-			}
-		},
         tablePage(page) {
             this.page = page;
         },
 	},
 	mounted() {
+        this.searchData.userId = this.$store.getters['GET_USER_ID'];
         this.submit();
 	},
     created() {
-        this.loginCheck();
     },
     watch: {
         "item": {

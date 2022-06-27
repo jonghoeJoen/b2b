@@ -302,11 +302,9 @@ export default {
               data: {...this.searchData, page: this.page},
             })
             .then((response) => {
-                console.log(response)
                 this.item = response.data.data;
             })
             .catch((error) => {
-                console.log(error);
             });
             this.dataTable.loading = false;
             this.searchData.startTime = '';
@@ -315,15 +313,13 @@ export default {
         },
 		async creatdFavor(data) {
             this.dataTableFavorites.loading = true;
-            axios("http://127.0.0.1:5000/favor/create", {
+            axios("/favor/create", {
               method: "post",
               data: data,
             })
             .then((response) => {
-                console.log(response);
             })
             .catch((error) => {
-                console.log(error);
             });
             this.dataTableFavorites.loading = false;
             alert('등록되었습니다.')
@@ -336,10 +332,8 @@ export default {
               data: data,
             })
             .then((response) => {
-                console.log(response);
             })
             .catch((error) => {
-                console.log(error);
             });
             this.dataTableFavorites.loading = false;
             alert('즐겨찾기가 해제 되었습니다.')
@@ -347,7 +341,7 @@ export default {
         },
 		async loadFavor() {
             this.dataTableFavorites.loading = true;
-            axios("http://127.0.0.1:5000/favor/get-all", {
+            axios("/favor/get-all", {
               method: "post",
               data: {search: this.searchData},
             })
@@ -355,37 +349,24 @@ export default {
                 this.dataTableFavorites.items = response.data.data;
             })
             .catch((error) => {
-                console.log(error);
             });
             this.dataTableFavorites.loading = false;
-        },
-        loginCheck() {
-			if (isValidJwt()) {
-				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
-                this.searchData.userId = String(data.userId);
-				
-			} else {
-				this.$router.push({
-					path: '/sign-in'
-				}).catch(error => {})
-			}
 		},
         loadCodeList() {
-            console.log(this.searchData)
             axios("/code/get-all", {
                 method: "post",
                 data: this.buildingSearchData,
             })
             .then((response) => {
-                console.log(response);
                 this.building.items = response.data.data
             })
             .catch((error) => {
-                console.log(error);
             });
         },
 	},
 	mounted() {
+        this.searchData.userId = this.$store.getters['GET_USER_ID'];
+        this.loadCodeList();
         this.loadStore();
         this.loadFavor();
     },
@@ -403,18 +384,7 @@ export default {
             },
             deep: true
         },
-        'searchData.buildingNum': {
-            handler(n) {
-                console.log(this.searchData.buildingNum);
-            },
-            deep: true,
-        }
-        
     },
-    created() {
-        this.loginCheck();
-        this.loadCodeList();
-    }
 }
 </script>
 

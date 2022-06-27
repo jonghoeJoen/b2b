@@ -206,7 +206,6 @@ export default Vue.extend({
                     let message; 
                     let flag;
                     flag = false;
-                    console.log(this.$data.data.password)
                     if (this.$data.data.password != null && this.$data.data.password != '' && value !== this.$data.data.password) {
                         message = '비밀번호와 일치하지 않습니다.';
                     } else {
@@ -241,10 +240,9 @@ export default Vue.extend({
                     }
                 })
                 .catch((error) => {
-                    console.log(error);
                 });
             } else {
-                axios("http://localhost:5000/user/seller-sign-up", {
+                axios("/user/seller-sign-up", {
                 method: "post",
                 data: this.data,
                 })
@@ -257,7 +255,6 @@ export default Vue.extend({
                     }
                 })
                 .catch((error) => {
-                    console.log(error);
                 });
             }
         },

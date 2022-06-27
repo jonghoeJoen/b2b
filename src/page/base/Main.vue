@@ -192,6 +192,7 @@ export default Vue.extend({
 			username: null,
 			userRole: null,
 			userId: null,
+			storeId: null,
         };
     },
     watch: {
@@ -205,10 +206,14 @@ export default Vue.extend({
 				this.username = data.username;
 				this.userRole = data.role;
 				this.userId = data.userId;
+				this.storeId = data.storeId;
 				store.commit('SET_USER_ROLE', this.userRole);
 				store.commit('SET_USER_ID', this.userId);
+				store.commit('SET_STORE_ID', this.storeId);
 			} else {
-				// console.log(isValidJwt())
+
+				store.commit('SET_URL_BEFORE_LOGIN', window.location.pathname + window.location.search);
+
 				// 로그인페이지로 이동
 				this.$router.push({
 					path: '/sign-in'

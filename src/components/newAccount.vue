@@ -218,7 +218,6 @@ export default Vue.component('new-account', {
             this.$emit('update:requestId', null);
         },
         createCheck() {
-            console.log(this.data);
             if (this.data.storeName == '') {
                 alert('업체명을 입력해주세요');
                 return;
@@ -268,21 +267,17 @@ export default Vue.component('new-account', {
                 }
             })
             .catch((error) => {
-                console.log(error);
             });
         },
         loadCodeList() {
-            console.log(this.searchData)
-            axios("http://127.0.0.1:5000/code/get-all", {
+            axios("/code/get-all", {
                 method: "post",
                 data: this.searchData,
             })
             .then((response) => {
-                console.log(response);
                 this.building.items = response.data.data
             })
             .catch((error) => {
-                console.log(error);
             });
         },
         clean() {

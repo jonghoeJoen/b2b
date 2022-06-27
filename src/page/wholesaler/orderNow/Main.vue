@@ -43,7 +43,7 @@
                                             ></v-text-field>
                                             <v-btn
                                                 class="pa-0 btn-black"
-                                                @click="submit()"
+                                                @click="loadOrderList()"
                                             >검색</v-btn>
                                         </div>
                                     </v-col>
@@ -90,6 +90,8 @@ import axios from 'axios';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import moment from 'moment';
+import store from '@/store';
+
 export default{
 	data(){
 		return {
@@ -166,18 +168,16 @@ export default{
         tablePage(page) {
             this.page = page;
         },
-		async submit() {
+		async loadOrderList() {
             this.dataTable.loading = true;
             axios("/order/get-all", {
               method: "post",
               data: {...this.searchData, page: this.page},
             })
             .then((response) => {
-                console.log(response);
                 this.item = response.data.data;
             })
             .catch((error) => {
-                console.log(error);
             });
             this.dataTable.loading = false;
             this.searchData.startTime = '';
@@ -186,12 +186,11 @@ export default{
         },
         saveOrder() {
             this.dataTable.loading = true;
-            axios("http://127.0.0.1:5000/order/save-order-list", {
+            axios("/order/save-order-list", {
               method: "post",
               data: this.dataTable.items,
             })
             .then((response) => {
-                console.log(response.data);
                 if (response.data === true) {
                     alert("저장완료");
                     this.$router.go(0);
@@ -199,31 +198,17 @@ export default{
                 else alert("저장실패");
             })
             .catch((error) => {
-                console.log(error);
             });
         this.dataTable.loading = false;
             this.searchData.startTime = '';
             this.searchData.endTime = '';
             this.searchData.text = '';
         },
-        loginCheck() {
-			if (isValidJwt()) {
-				let data = JSON.parse(atob(localStorage.token.split('.')[1]))
-                // this.searchData.userId = String(data.userId);
-                this.searchData.storeId = String(data.storeId);
-				;
-                this.submit();
-			} else {
-				this.$router.push({
-					path: '/sign-in'
-				}).catch(error => {})
-			}
-		},
 	},
 	mounted() {
         this.searchData.userId = this.$route.query.customer ? this.$route.query.customer : null;
-        console.log(this.searchData);
-        this.loginCheck();
+        this.searchData.storeId = store.getters['GET_STORE_ID'];
+        this.loadOrderList();
 	},
     watch: {
         "item": {
@@ -238,7 +223,7 @@ export default{
         },
         "page": {
             handler(n) {
-                this.submit();
+                this.loadOrderList();
             },
             deep: true
         }

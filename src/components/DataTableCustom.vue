@@ -812,12 +812,6 @@ export default Vue.component('data-table-custom-component', {
         };
     },
     watch: {
-        headers: {
-            handler(n) {
-                console.log(n);
-            },
-            deep:true,
-        },
         "options.page": {
             handler(n) {
                 this.$emit('tablePage', this.options.page);
