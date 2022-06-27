@@ -1,9 +1,18 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+html, body {
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  
+  #app {
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
 .test {
     color: blue !important;
     background-color: blue !important;
 }
 .sign-up-title {
-    font-family: 'Inter';
     font-style: normal;
     font-weight: 700;
     font-size: 50px;
@@ -11,7 +20,6 @@
 }
 
 .sign-up-subtitle {
-    font-family: 'Work Sans';
     font-style: normal;
     font-weight: 700;
     font-size: 20px;
@@ -20,7 +28,6 @@
 }
 
 .sign-up-menu {
-    font-family: 'Noto Sans KR';
     font-style: normal;
     font-weight: 400;
     font-size: 20px;
