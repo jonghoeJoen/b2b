@@ -29,7 +29,7 @@
                             multi-sort
                             content-class="tableline equipment-table td50"
                             @click:multiButton="clickMultiButton($event)"
-                            @tablePage="tablePage"
+                            @tablePage="favorTablePage"
                         >
                         </data-table-custom-component>
                     </v-col>
@@ -114,8 +114,8 @@
             :value.sync="dialog.accountValue"
         ></new-account>
         <order-modify
-            :value.sync="dialog.orderValue"
-            :requestId.sync="dialog.requestId"
+            :value.sync="orderDialog.orderValue"
+            :wholesaleStore.sync="orderDialog.store"
         ></order-modify>
     </v-card>
 </template>
@@ -242,6 +242,10 @@ export default {
                     },
                 },
 			},
+            orderDialog: {
+                accountValue: false,
+                store: null,
+            },
             dialog: {
                 accountValue: false,
                 requestId: null,
@@ -249,6 +253,7 @@ export default {
             },
             item: [],
             page: 1,
+            favorPage: 1,
             searchData: {
                 userId: '',
                 startTime: '',
@@ -262,12 +267,15 @@ export default {
             },
             building: {
                 items: [],
-            }
+            },
 		};
 	},
 	methods: {
         tablePage(page) {
             this.page = page;
+        },
+        favorTablePage(page) {
+            this.favorPage = page;
         },
         dialogChange() {
             this.dialog.accountValue = true;
@@ -277,9 +285,11 @@ export default {
             ;
         },
         clickMultiButton(data) {
+            // 주문하기
             if(data.header == 'order') {
-                this.dialog.requestId = data.item.id;
-                this.dialog.orderValue = true; 
+                this.orderDialog.store = data.item;
+                this.orderDialog.orderValue = true; 
+                console.log(this.orderDialog)
             } else if (data.header == 'favorAdd') {
                 ;
                 for(let i = 0; i < this.dataTableFavorites.items.length; i++) {
@@ -303,13 +313,13 @@ export default {
               data: {...this.searchData, page: this.page},
             })
             .then((response) => {
-                console.log(response.data.total_pages)
                 this.dataTable.totalRows = response.data.total_pages;
                 this.dataTable.loading = false;
                 this.searchData.startTime = '';
                 this.searchData.endTime = '';
                 this.searchData.text = '';
                 this.item = response.data.data;
+                this.dataTable.items = this.item;
             })
             .catch((error) => {
             });
@@ -346,10 +356,11 @@ export default {
             this.dataTableFavorites.loading = true;
             axios("/favor/get-all", {
               method: "post",
-              data: {search: this.searchData},
+              data: {search: this.searchData, page: this.favorPage},
             })
             .then((response) => {
                 this.dataTableFavorites.items = response.data.data;
+                this.dataTableFavorites.totalRows = response.data.total_pages;
             })
             .catch((error) => {
             });
@@ -368,22 +379,22 @@ export default {
         },
 	},
 	mounted() {
+        console.log(this.date)
         this.searchData.userId = this.$store.getters['GET_USER_ID'];
         this.loadCodeList();
         this.loadStore();
         this.loadFavor();
     },
     watch: {
-        "item": {
-            handler(n) {
-                this.dataTable.totalRows = n.length
-                this.dataTable.items = n;
-            },
-            deep: true
-        },
         "page": {
             handler(n) {
                 this.loadStore();
+            },
+            deep: true
+        },
+        "favorPage": {
+            handler(n) {
+                this.loadFavor();
             },
             deep: true
         },

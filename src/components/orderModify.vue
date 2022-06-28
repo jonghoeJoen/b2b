@@ -1,7 +1,6 @@
 <template>
     <v-dialog
         scrollable
-        persistent
         :max-height="Number.parseInt($vuetify.breakpoint.height * 0.9, 10) < 600 ? Number.parseInt($vuetify.breakpoint.height * 0.9, 10) : 600"
         :max-width="Number.parseInt($vuetify.breakpoint.width * 0.9, 10) < 1000 ? Number.parseInt($vuetify.breakpoint.width * 0.9, 10) : 1000"
         v-model="valueData"
@@ -19,17 +18,66 @@
                     주문 매장
                 </v-col>
                 <v-col cols="6" md="10" class="d-flex justify-start align-center pa-4">
-                    {{store.store_name}}
+                    {{wholesaleStore.store_name}}
                 </v-col>
                 <v-col cols="6" md="2" class="d-flex justify-center align-center pa-4">
                     매장 주소
                 </v-col>
                 <v-col cols="6" md="10" class="d-flex justify-start align-center pa-4">
-                    {{store.store_location}}
+                    {{wholesaleStore.name}} {{wholesaleStore.store_location}}
                 </v-col>
                 <v-col cols="12">
                     <v-divider></v-divider>
                 </v-col>
+                <v-col cols="12">
+                    <v-row class="ma-1">
+                        <v-col cols="12" md="2" class="d-flex justify-center align-center pa-4 text--order">
+                            픽업희망일
+                        </v-col>
+                        <v-col cols="12" md="10" class="d-flex justify-center pa-0">
+                            <v-menu
+                                v-model="menu"
+                                :close-on-content-click="true"
+                                :nudge-right="40"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="auto"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                    v-model="date"
+                                    prepend-icon="mdi-calendar"
+                                    readonly
+                                    v-bind="attrs"
+                                    v-on="on"
+                                ></v-text-field>
+                                </template>
+                                <v-date-picker
+                                v-model="date"
+                                locale="ko-KR"
+                                no-title
+                                scrollable
+                                >
+                                <!-- <v-btn
+                                    text
+                                    color="primary"
+                                    @click="menu = false"
+                                >
+                                    Cancel
+                                </v-btn>
+                                <v-btn
+                                    text
+                                    color="primary"
+                                    @click="$refs.menu.save(date)"
+                                >
+                                    OK
+                                </v-btn> -->
+                                </v-date-picker>
+                            </v-menu>
+                        </v-col>
+                    </v-row>
+                </v-col>
+
                 <v-col cols="12">
                     <template v-for="i in order.length">
                         <v-row :key="i" class="ma-1">
@@ -135,15 +183,15 @@ export default Vue.component('order-modify', {
             type: Boolean,
             default: false,
         },
-        requestId: {
-            type: Number,
+        wholesaleStore: {
+            type: Object,
             default: null,
         },
     },
     data() {
         return {
             number: 1,
-            valueData: false,
+            valueData: this.value,
             dataTable: {
 				headers : [
                     {
@@ -183,24 +231,30 @@ export default Vue.component('order-modify', {
             store: [],
             flag: false,
             userId: null,
+            date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+            menu: false,
+            modal: false,
+            menu2: false,
         };
     },
     watch: {
-        value(newValue) {
-            this.valueData = newValue;
-            this.$emit('input', newValue);
+        value(n) {
+            console.log("value", n);
+            this.valueData = n;
+            this.$emit('input', n);
         },
         valueData(newValue) {
             this.$emit('input', newValue);
         },
-        requestId(newValue) {
-            if(newValue != null) {
-                this.loadStore(newValue);
-                for (let i = 0; i < this.order.length; i++) {
-                    this.order[i].store_id = newValue;
-                }
-            }
-        }
+        // wholesaleStore(newValue) {
+        //     if(newValue != null) {
+        //         console.log(newValue)
+        //         // this.loadStore(newValue);
+        //         for (let i = 0; i < this.order.length; i++) {
+        //             this.order[i].store_id = newValue;
+        //         }
+        //     }
+        // }
     },
     methods: {
         async modalCheck() {
@@ -208,7 +262,7 @@ export default Vue.component('order-modify', {
         async closeModal() {
             this.order = [ { item: '', user_id: this.userId , store_id: this.requestId, color: '', size: '', quantity: null, comment: '' } ];
             this.$emit('update:value', false);
-            this.$emit('update:requestId', null);
+            this.$emit('update:reque', null);
         },
         async dialogChange(data) {
             ;
@@ -226,27 +280,13 @@ export default Vue.component('order-modify', {
                 return;
             }
         },
-        loadStore(data) {
-            let str = data.toString();
-            let test = { id: str };
-            axios("/shop/load", {
-              method: "post",
-              data: test,
-            })
-            .then((response) => {
-                this.store = response.data.data[0];
-            })
-            .catch((error) => {
-            });
-        },
         createdOrderCheck() {
             let data = [];
             for (let i = 0; i < this.order.length; i++) {
                 if (this.order[i].item != '' && this.order[i].item != null) {
-                    data.push(this.order[i])
+                    data.push({...this.order[i], store_id: this.wholesaleStore.id, pickupDate: this.date});
                 }
             }
-            ;
             this.createdOrder(data);
 		},
         createdOrder(test) {
@@ -272,6 +312,8 @@ export default Vue.component('order-modify', {
             this.clean();
             this.valueData = false;
             this.$emit('update:value', false);
+
+            console.log(this.valueData, this.value)
         },
         clean() {
             for (let i = 0; i < this.order.length; i++) {

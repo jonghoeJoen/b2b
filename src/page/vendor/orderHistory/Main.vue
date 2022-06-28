@@ -142,7 +142,7 @@ export default{
                     },
 				],
                 page: 1,
-                itemsPerPage: 10,
+                itemsPerPage: 20,
                 totalRows: 10,
                 loading: false,
 				items: [],
@@ -176,6 +176,8 @@ export default{
             })
             .then((response) => {
                 this.item = response.data.data;
+                this.dataTable.items = this.item;
+                this.dataTable.totalRows = response.data.total_rows;
             })
             .catch((error) => {
             });
@@ -197,7 +199,7 @@ export default{
     watch: {
         "item": {
             handler(n) {
-                this.dataTable.totalRows = n.length
+                // this.dataTable.totalRows = n.length
                 n.forEach(e => {
                     e.orderDate = moment(e.created_date).format('YYYY-MM-DD');
                     if (e.available_status == 'T') {
@@ -210,7 +212,7 @@ export default{
                         e.availableText = '품절'
                     }
                 })
-                this.dataTable.items = n;
+                // this.dataTable.items = n;
             },
             deep: true
         },

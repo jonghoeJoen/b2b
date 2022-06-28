@@ -6,7 +6,12 @@
                     <v-col cols="12" md="10" xs="12" class="pa-3">
                         <v-row dense class="d-flex justify-space-between bg-search">
                             <v-col cols=12 md="6" xs="12" class="d-flex justify-start align-center pa-3">
-                                <div class="sign-up-subtitle d-flex align-center">주문 현황</div>
+                                <template v-if="urlShared === false">
+                                    <div class="sign-up-subtitle d-flex align-center">주문 현황</div>
+                                </template>
+                                <template v-else>
+                                    <div class="sign-up-subtitle d-flex align-center">주문 현황 - {{ user_name }}</div>
+                                </template>
                             </v-col> 
                             <v-col cols=12 md="6" sm="12" class="d-flex justify-center align-center pa-3">
                                 <v-row dense>
@@ -137,7 +142,7 @@ export default{
                     },
 				],
                 page: 1,
-                itemsPerPage: 10,
+                itemsPerPage: 20,
                 totalRows: 10,
                 loading: false,
 				items: [
@@ -163,7 +168,9 @@ export default{
                 endTime: '',
                 text: '',
                 storeId: '',
-            }
+            },
+            page: 1,
+            urlShared: false,
 		};
 	},
 	methods: {
@@ -171,6 +178,7 @@ export default{
             this.page = page;
         },
 		async loadOrderList() {
+            console.log({...this.searchData, page: this.page})
             this.dataTable.loading = true;
             axios("/order/get-all", {
               method: "post",
@@ -178,6 +186,8 @@ export default{
             })
             .then((response) => {
                 this.item = response.data.data;
+                this.dataTable.items = this.item;
+                this.dataTable.totalRows = response.data.total_rows;
             })
             .catch((error) => {
             });
@@ -208,6 +218,12 @@ export default{
         },
 	},
 	mounted() {
+        // 도매처에 url 공유한 경우
+        console.log(this.$route.query)
+        if (this.$route.query.shared) {
+            console.log("shared true");
+            this.urlShared = true;
+        }
         this.searchData.userId = this.$route.query.customer ? this.$route.query.customer : null;
         this.searchData.storeId = store.getters['GET_STORE_ID'];
         this.loadOrderList();
@@ -215,11 +231,11 @@ export default{
     watch: {
         "item": {
             handler(n) {
-                this.dataTable.totalRows = n.length
+                // this.dataTable.totalRows = n.length
                 n.forEach(e => {
                     e.orderDate = moment(e.created_date).format('YYYY-MM-DD');
                 })
-                this.dataTable.items = n;
+                // this.dataTable.items = n;
             },
             deep: true
         },

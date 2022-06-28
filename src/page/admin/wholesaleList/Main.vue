@@ -126,7 +126,7 @@ export default {
 				items: [],
                 loading: false,
                 page: 1,
-                itemsPerPage: 10,
+                itemsPerPage: 20,
                 totalRows: 10,
                 cell: {
                     multiButton: {
@@ -168,12 +168,10 @@ export default {
             this.dialog.accountValue = true;
         },
         clickMultiButton(data) {
-            ;
             if(data.header == 'order') {
                 this.dialog.requestId = data.item.id;
                 this.dialog.orderValue = true; 
             } else if (data.header == 'favorAdd') {
-                ;
                 for(let i = 0; i < this.dataTableFavorites.items.length; i++) {
                     if(data.item.id == this.dataTableFavorites.items[i].store_id) {
                         alert('이미 즐겨찾기에 등록된 업체입니다.')
@@ -196,6 +194,8 @@ export default {
             .then((response) => {
                 // console.log()
                 this.item = response.data.data;
+                this.dataTable.items = this.item;
+                this.dataTable.totalRows = response.data.total_pages;
             })
             .catch((error) => {
             });
@@ -211,13 +211,13 @@ export default {
         this.loadStore();
     },
     watch: {
-        "item": {
-            handler(n) {
-                this.dataTable.totalRows = n.length
-                this.dataTable.items = n;
-            },
-            deep: true
-        },
+        // "item": {
+        //     handler(n) {
+        //         this.dataTable.totalRows = n.length
+        //         this.dataTable.items = n;
+        //     },
+        //     deep: true
+        // },
         "page": {
             handler(n) {
                 this.loadStore();
