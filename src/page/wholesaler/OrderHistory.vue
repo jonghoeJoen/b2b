@@ -10,7 +10,7 @@
                                     <div class="sign-up-subtitle d-flex align-center">주문 현황</div>
                                 </template>
                                 <template v-else>
-                                    <div class="sign-up-subtitle d-flex align-center">주문 현황 - {{ user_name }}</div>
+                                    <div class="sign-up-subtitle d-flex align-center">주문 현황 - {{this.customerInfo.name}}</div>
                                 </template>
                             </v-col> 
                             <v-col cols=12 md="6" sm="12" class="d-flex justify-center align-center pa-3">
@@ -59,6 +59,18 @@
                         </v-row>
                     </v-col>
                     <v-col cols="10">
+                        <div v-for="(index, item) in dataTable.items" :key="index">
+                            <v-card>
+                                <v-card-title>
+                                    {{item.pickup_date}}
+                                </v-card-title>
+                                <v-card-text>
+
+                                </v-card-text>
+                            </v-card>
+                        </div>
+                    </v-col>
+                    <v-col cols="10">
                         <data-table-custom-component
                             class="th-center"
                             dense
@@ -92,7 +104,6 @@
     </v-card>
 </template>
 <script>
-import isValidJwt from '@/utils';
 import axios from 'axios';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import DatePicker from '@/components/DatePicker.vue';
@@ -110,9 +121,9 @@ export default{
 			},
             dataTable: {
 				headers : [
-                    {
-                        text: '주문일자', value: 'orderDate', align: 'center', cellClass: 'minw-10 text-center',
-                    },
+                    // {
+                    //     text: '주문일자', value: 'orderDate', align: 'center', cellClass: 'minw-10 text-center',
+                    // },
                     {
                         text: '주문고객', value: 'user_name', align: 'center', cellClass: 'minw-10 text-center',
                     },
@@ -171,6 +182,8 @@ export default{
             },
             page: 1,
             urlShared: false,
+            orderList: [],
+            customerInfo: null,
 		};
 	},
 	methods: {
@@ -180,12 +193,14 @@ export default{
 		async loadOrderList() {
             console.log({...this.searchData, page: this.page})
             this.dataTable.loading = true;
-            axios("/order/get-all", {
+            axios("/order/get-all-date", {
               method: "post",
               data: {...this.searchData, page: this.page},
             })
             .then((response) => {
                 this.item = response.data.data;
+                console.log(this.item)
+                console.log(this.item[0].grouped_item.split('#'), this.item[0].grouped_size.split('#'))
                 this.dataTable.items = this.item;
                 this.dataTable.totalRows = response.data.total_rows;
             })
@@ -216,38 +231,30 @@ export default{
             this.searchData.endTime = '';
             this.searchData.text = '';
         },
+        async loadCustomerInfo() {
+            axios.get('/user/get-user', {
+                params: {
+                    id: this.userId,
+                }
+            })
+            .then((response) => {
+                console.log(response)
+                this.customerInfo = response.data;
+            })
+            .catch((error) => {
+            });
+        }
 	},
 	mounted() {
-
         const userId = this.$route.query.customer ? this.$route.query.customer : null;
         const storeId = this.$route.query.store ? this.$route.query.store : store.getters['GET_STORE_ID'];
         console.log(this.$route.query)
         // 도매처에 url 공유한 경우 자동 로그인
-        // if (Object.keys(this.$route.query).includes('shared')) {
-        //     this.urlShared = true;
-        //     axios.post("/login/wholesaler-login", {
-        //         storeId: storeId
-        //     }).then((res) => {
-        //         console.log(res)
-        //         localStorage.token = res.data.token
+        if (Object.keys(this.$route.query).includes('shared')) {
+            this.urlShared = true;
+        }
 
-        //         if (isValidJwt()) {
-        //         console.log("valid valid valid")
-		// 		let data = JSON.parse(atob(localStorage.token.split('.')[1]))
-		// 		this.username = data.username;
-		// 		this.userRole = data.role;
-		// 		this.userId = data.userId;
-		// 		this.storeId = data.storeId;
-		// 		store.commit('SET_USER_ROLE', this.userRole);
-		// 		store.commit('SET_USER_ID', this.userId);
-		// 		store.commit('SET_STORE_ID', this.storeId);
-		// 	}
-        //     }).catch((error) => {
-        //         console.log(error)
-        //         alert("로그인 실패!");
-        //         return;
-        //     });
-        // }
+        if (this.userId !== null) this.loadCustomerInfo();
 
         this.searchData.userId = userId;
         this.searchData.storeId = storeId;
@@ -256,11 +263,9 @@ export default{
     watch: {
         "item": {
             handler(n) {
-                // this.dataTable.totalRows = n.length
                 n.forEach(e => {
                     e.orderDate = moment(e.created_date).format('YYYY-MM-DD');
                 })
-                // this.dataTable.items = n;
             },
             deep: true
         },

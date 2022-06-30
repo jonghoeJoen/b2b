@@ -71,15 +71,15 @@ export default Vue.extend({
     methods: {
         async login() {
             let path = "/login/login";
-                axios.post(path, {
-                    username: this.data.username,
-                    password: this.data.password
-                }).then((res) => {
-                    localStorage.token = res.data.token
-                    this.$router.push("/")
-                }).catch((error) => {
-                    alert("로그인 실패!\n 아이디, 패스워드 확인 후 다시 로그인하세요.")
-                });
+            axios.post(path, {
+                username: this.data.username,
+                password: this.data.password
+            }).then((res) => {
+                localStorage.token = res.data.token
+                this.$router.push("/")
+            }).catch((error) => {
+                alert("로그인 실패!\n 아이디, 패스워드 확인 후 다시 로그인하세요.")
+            });
         },
     },
     mounted() {
