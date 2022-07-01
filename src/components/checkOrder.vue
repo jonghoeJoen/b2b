@@ -106,7 +106,7 @@ export default Vue.component('check-order', {
                         text: '가능여부', value: 'availableText', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '비고', value: 'comment', align: 'center', cellClass: 'minw-10 text-center',
+                        text: '메모', value: 'comment', align: 'center', cellClass: 'minw-10 text-center',
                     },
 				],
                 page: 1,

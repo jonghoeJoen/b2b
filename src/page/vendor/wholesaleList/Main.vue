@@ -381,6 +381,7 @@ export default {
 	mounted() {
         console.log(this.date)
         this.searchData.userId = this.$store.getters['GET_USER_ID'];
+        console.log(this.searchData)
         this.loadCodeList();
         this.loadStore();
         this.loadFavor();

@@ -16,8 +16,8 @@
                                         class="d-flex ma-0"
                                         :rules="[rules.role]"
                                         hide-details="auto">
-                                        <v-radio label="도매처" value = 2></v-radio>
-                                        <v-radio label="판매처" value = 3></v-radio>
+                                        <v-radio label="판매처" value = 2></v-radio>
+                                        <v-radio label="도매처" value = 3></v-radio>
                                     </v-radio-group>
                                 </v-col>
                                 <v-col cols="3">
@@ -47,7 +47,7 @@
                                         type="password"
                                         hide-details="auto"
                                         v-model="data.password"
-                                        :rules="[rules.required, rules.password]"
+                                        :rules="[rules.required]"
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="3">
@@ -189,19 +189,19 @@ export default Vue.extend({
             passwordCheck: null,
             rules: {
                 required: (value) => !!value || '필수',
-                password: (value) => {
-                    let message; 
-                    let flag;
-                    flag = false;
-                    if (value == null || value.length < 8) {
-                        message = '비밀번호 8자 이상';
-                    } else if (/(\w)\1\1/.test(value)) {
-                        message = '동일한 3자리 문자';
-                    } else {
-                        flag = true;
-                    }
-                    return flag || message;
-                },
+                // password: (value) => {
+                //     let message; 
+                //     let flag;
+                //     flag = false;
+                //     if (value == null || value.length < 8) {
+                //         message = '비밀번호 8자 이상';
+                //     } else if (/(\w)\1\1/.test(value)) {
+                //         message = '동일한 3자리 문자';
+                //     } else {
+                //         flag = true;
+                //     }
+                //     return flag || message;
+                // },
                 passwordCheck: (value) => {
                     let message; 
                     let flag;

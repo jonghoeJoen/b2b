@@ -26,7 +26,8 @@ const routes = [
             },
             {
                 path:'/orderNow',
-                component: () => import('../page/wholesaler/orderNow/Main.vue'),
+                // component: () => import('../page/wholesaler/orderNow/Main.vue'),
+                component: () => import('../page/wholesaler/OrderHistory.vue'),
             },
             {
                 path:'/store/orderhistory',

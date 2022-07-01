@@ -135,7 +135,7 @@
                                                 <v-text-field
                                                     dense
                                                     outlined
-                                                    label="비고"
+                                                    label="메모"
                                                     v-model="order[i-1].comment"
                                                     hide-details="auto"
                                                 ></v-text-field>

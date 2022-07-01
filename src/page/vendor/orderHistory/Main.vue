@@ -51,41 +51,69 @@
                                     </v-col>
                                 </v-row>
                             </v-col>
-                            <v-col cols=12 class="d-flex justify-start align-center">
-                                <div class="d-flex align-center"> 
-                                    <span class="d-flex align-center mr-3 pa-3" style="font-size: 12px;">도매처 url 복사</span>
-                                    <v-btn
-                                    x-small
-                                    @click="copyUrl()"
-                                    >복사하기</v-btn>
-                                </div>
-                            </v-col> 
                         </v-row>
                     </v-col>
-                    <v-col cols="12" md="10" xs="12">
-                        <data-table-custom-component
-                            class="th-center"
-                            dense
-                            download-hide
-                            upload-hide
-                            add-hide
-                            remove-hide
-                            countHide
-                            itemsPerPageHide
-                            :headers="dataTable.headers"
-                            :items="dataTable.items"
-                            :totalRows="dataTable.totalRows"
-                            :loading="dataTable.loading"
-                            :page="dataTable.page"
-                            :search="dataTable.search"
-                            :items-per-page="dataTable.itemsPerPage"
-                            :cell="dataTable.cell"
-                            :sort-by="dataTable.sortBy"
-                            :sort-desc="dataTable.sortDesc"
-                            multi-sort
-                            @click:multiButton="clickMultiButton($event)"
-                            @tablePage="tablePage"
-                        ></data-table-custom-component>
+                    <v-col cols="10">
+                        <div v-for="order in orderList" :key="order.id">
+                            <v-card class="mb-2">
+                                <v-card-title class="d-flex">
+                                    <v-row class="mx-3">
+                                        <v-col>
+                                            <span>{{order.pickupDate}}</span>
+                                        </v-col>
+                                        <v-col class="d-flex justify-end">
+                                            <span class="mr-3" style="font-size: 14px; text-align: end;">{{order.storeName}}</span>
+                                            <v-btn small @click="copyUrl(order.storeId)">공유 URL 복사</v-btn>
+                                        </v-col>
+                                    </v-row>
+                                    
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-simple-table dense>
+                                        <template v-slot:default>
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 20%;" class="text-center">
+                                                    상품명
+                                                </th>
+                                                <th style="width: 15%;" class="text-center">
+                                                    색상
+                                                </th>
+                                                <th style="width: 10%;" class="text-center">
+                                                    사이즈
+                                                </th>
+                                                <th style="width: 10%;" class="text-center">
+                                                    수량
+                                                </th>
+                                                <th style="width: 20%;" class="text-center">
+                                                    가능 여부
+                                                </th>
+                                                <th style="width: 25%;" class="text-center">
+                                                    메모
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                            v-for="(item, index) in order.order"
+                                            :key="index"
+                                            >
+                                                <td class="text-center">{{ item.item }}</td>
+                                                <td class="text-center">{{ item.color }}</td>
+                                                <td class="text-center">{{ item.size }}</td>
+                                                <td class="text-center">{{ item.quantity }}</td>
+                                                <td v-if="item.status === 'T'" class="text-center">가능</td>
+                                                <td v-else-if="item.status === 'P'" class="text-center">부분가능</td>
+                                                <td v-else-if="item.status === 'A'" class="text-center">추후가능</td>
+                                                <td v-else-if="item.status === 'X'" class="text-center">품절</td>
+                                                <td class="text-center">{{ item.comment }}</td>
+                                            </tr>
+                                        </tbody>
+                                        </template>
+                                    </v-simple-table>
+                                </v-card-text>
+                            </v-card>
+                        </div>
                     </v-col>
                 </v-row>
             </v-col>
@@ -138,7 +166,7 @@ export default{
                         text: '가능여부', value: 'availableText', align: 'center', cellClass: 'minw-10  text-center'
                     },
                     {
-                        text: '비고', value: 'comment', align: 'center', cellClass: 'minw-15 text-center'
+                        text: '메모', value: 'comment', align: 'center', cellClass: 'minw-15 text-center'
                     },
 				],
                 page: 1,
@@ -157,11 +185,14 @@ export default{
                 storeId: '',
             },
             page: 1,
+            orderList: [],
+            userId: null,
+            storeId: null,
 		};
 	},
 	methods: {
-        copyUrl() {
-            let url = window.location.protocol + "//" + window.location.host + "/orderNow?customer=" + store.getters['GET_USER_ROLE'];
+        copyUrl(storeId) {
+            let url = window.location.protocol + "//" + window.location.host + "/orderNow?customer=" + store.getters['GET_USER_ROLE'] + '&store=' + storeId + '&shared';
             this.$copyText(url).then(function(e) {
                 alert('복사 완료');
             }, function (e) {
@@ -170,21 +201,52 @@ export default{
         },
 		async submit() {
             this.dataTable.loading = true;
-            axios("/order/get-all", {
+            let response = await axios("/order/get-all-date", {
               method: "post",
               data: {...this.searchData, page: this.page},
             })
-            .then((response) => {
-                this.item = response.data.data;
-                this.dataTable.items = this.item;
-                this.dataTable.totalRows = response.data.total_rows;
-            })
-            .catch((error) => {
-            });
-            this.dataTable.loading = false;
-            this.searchData.startTime = '';
-            this.searchData.endTime = '';
-            this.searchData.text = '';
+                this.items = response.data.data;
+                this.items.forEach((x) => { 
+                    x.ids = x.grouped_id.split('~#~');
+                    x.items = x.grouped_item.split('~#~');
+                    x.colors = x.grouped_color ? x.grouped_color.split('~#~') : [];
+                    x.sizes = x.grouped_size ? x.grouped_size.split('~#~') : [];
+                    x.quantities = x.grouped_quantity ? x.grouped_quantity.split('~#~') : [];
+                    x.status = x.grouped_status ? x.grouped_status.split('~#~') : [];
+                    x.comments = x.grouped_comment? x.grouped_comment.split('~#~') : [];
+                });
+
+                let orderItems = [];
+                this.items.forEach(x => { 
+                    let orderItem = {};
+                    let itemInfo = [];
+                    for (let i = 0; i < x.items.length; i++) {
+                        itemInfo.push ({
+                            id: x.ids[i],
+                            item: x.items[i],
+                            color: x.colors.length > i ? x.colors[i] : null,
+                            size: x.sizes.length > i ? x.sizes[i] : null,
+                            quantity: x.quantities.length > i ? x.quantities[i] : null,
+                            status: x.status.length > i ? x.status[i] : null,
+                            comment: x.comments.length > i ? x.comments[i] : null,
+                        });
+                    }
+                    console.log("x", x)
+                    orderItem = {
+                        userName: x.user_name,
+                        userMobileNo: x.user_mobile_no,
+                        pickupDate: x.pickup_date,
+                        order: itemInfo, 
+                        userId: x.user_id,
+                        storeId: x.store_id,
+                        storeName: x.store_name,
+                        createdDate: x.created_date,
+                    };
+                    orderItems.push(orderItem);
+                })
+
+                this.orderList = orderItems;
+                console.log(this.orderList)
         },
         tablePage(page) {
             this.page = page;

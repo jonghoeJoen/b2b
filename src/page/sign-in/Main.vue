@@ -84,7 +84,6 @@ export default Vue.extend({
     },
     mounted() {
         let returnURL = store.getters['GET_URL_BEFORE_LOGIN'];
-			console.log(returnURL);
     },
     created() {
     },

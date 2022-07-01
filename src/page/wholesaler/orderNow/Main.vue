@@ -59,6 +59,79 @@
                         </v-row>
                     </v-col>
                     <v-col cols="10">
+                        <div v-for="(order, orderIdx) in orderList" :key="order.id">
+                            <v-card>
+                                <v-card-title class="d-flex">
+                                    <v-row class="mx-3">
+                                        <v-col>
+                                            <span>{{order.pickupDate}}</span>
+                                        </v-col>
+                                        <v-col class="d-flex justify-end">
+                                            <div>
+                                                <span style="font-size: 14px; text-align: end;" class="ma-0 pa-0">{{order.userName}}
+                                                <span style="font-size: 10px; text-align: end;" class="ma-0 pa-0">{{order.userMobileNo}}</span></span>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                    
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-simple-table dense>
+                                        <template v-slot:default>
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 20%;" class="text-center">
+                                                    상품명
+                                                </th>
+                                                <th style="width: 15%;" class="text-center">
+                                                    색상
+                                                </th>
+                                                <th style="width: 10%;" class="text-center">
+                                                    사이즈
+                                                </th>
+                                                <th style="width: 10%;" class="text-center">
+                                                    수량
+                                                </th>
+                                                <th style="width: 20%;" class="text-center">
+                                                    가능 여부
+                                                </th>
+                                                <th style="width: 25%;" class="text-center">
+                                                    메모
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                            v-for="(item, index) in order.order"
+                                            :key="index"
+                                            >
+                                                <td class="text-center">{{ item.item }}</td>
+                                                <td class="text-center">{{ item.color }}</td>
+                                                <td class="text-center">{{ item.size }}</td>
+                                                <td class="text-center">{{ item.quantity }}</td>
+                                                <td class="text-center">
+                                                    <v-select 
+                                                        dense
+                                                        :items="status"
+                                                        item-text="text"
+                                                        item-value="value"
+                                                        v-model="item.status"
+                                                        hide-details
+                                                    ></v-select>
+                                                </td>
+                                                <td class="text-center"><v-text-field v-model="item.comment"></v-text-field></td>
+                                            </tr>
+                                        </tbody>
+                                        </template>
+                                    </v-simple-table>
+                                    <v-col cols="12" class="d-flex justify-end">
+                                        <v-btn small class="btn-order" @click="saveOrder(orderIdx)">저장</v-btn>
+                                    </v-col>
+                                </v-card-text>
+                            </v-card>
+                        </div>
+                    </v-col>
+                    <v-col cols="10">
                         <data-table-custom-component
                             class="th-center"
                             dense
@@ -138,7 +211,7 @@ export default{
                         text: '가능여부', value: 'available_status', align: 'center', cellClass: 'minw-15 w-15 text-center', type: 'autocomplete'
                     },
                     {
-                        text: '비고', value: 'comment', align: 'center', cellClass: 'minw-15 text-center', type: 'textField'
+                        text: '메모', value: 'comment', align: 'center', cellClass: 'minw-15 text-center', type: 'textField'
                     },
 				],
                 page: 1,
@@ -171,6 +244,9 @@ export default{
             },
             page: 1,
             urlShared: false,
+            userId: null,
+            storeId: null,
+            orderList: [],
 		};
 	},
 	methods: {
@@ -178,23 +254,69 @@ export default{
             this.page = page;
         },
 		async loadOrderList() {
-            console.log({...this.searchData, page: this.page})
+            // console.log({...this.searchData, page: this.page})
+            // this.dataTable.loading = true;
+            // axios("/order/get-all", {
+            //   method: "post",
+            //   data: {...this.searchData, page: this.page},
+            // })
+            // .then((response) => {
+            //     this.item = response.data.data;
+            //     this.dataTable.items = this.item;
+            //     this.dataTable.totalRows = response.data.total_rows;
+            // })
+            // .catch((error) => {
+            // });
+            // this.dataTable.loading = false;
+            // this.searchData.startTime = '';
+            // this.searchData.endTime = '';
+            // this.searchData.text = '';
             this.dataTable.loading = true;
-            axios("/order/get-all", {
+            let response = await axios("/order/get-all-date", {
               method: "post",
               data: {...this.searchData, page: this.page},
             })
-            .then((response) => {
-                this.item = response.data.data;
-                this.dataTable.items = this.item;
-                this.dataTable.totalRows = response.data.total_rows;
-            })
-            .catch((error) => {
+            this.items = response.data.data;
+            console.log(response.data.data)
+            this.items.forEach((x) => { 
+                x.ids = x.grouped_id.split('~#~');
+                x.items = x.grouped_item.split('~#~');
+                x.colors = x.grouped_color ? x.grouped_color.split('~#~') : [];
+                x.sizes = x.grouped_size ? x.grouped_size.split('~#~') : [];
+                x.quantities = x.grouped_quantity ? x.grouped_quantity.split('~#~') : [];
+                x.status = x.grouped_status ? x.grouped_status.split('~#~') : [];
+                x.comments = x.grouped_comment? x.grouped_comment.split('~#~') : [];
             });
-            this.dataTable.loading = false;
-            this.searchData.startTime = '';
-            this.searchData.endTime = '';
-            this.searchData.text = '';
+
+            let orderItems = [];
+            this.items.forEach(x => { 
+                let orderItem = {};
+                let itemInfo = [];
+                for (let i = 0; i < x.items.length; i++) {
+                    itemInfo.push ({
+                        id: x.ids[i],
+                        item: x.items[i],
+                        color: x.colors.length > i ? x.colors[i] : null,
+                        size: x.sizes.length > i ? x.sizes[i] : null,
+                        quantity: x.quantities.length > i ? x.quantities[i] : null,
+                        status: x.status.length > i ? x.status[i] : null,
+                        comment: x.comments.length > i ? x.comments[i] : null,
+                    });
+                }
+                orderItem = {
+                    userName: x.user_name,
+                    userMobileNo: x.user_mobile_no,
+                    pickupDate: x.pickup_date,
+                    order: itemInfo, 
+                    userId: x.user_id,
+                    storeId: x.store_id,
+                    createdDate: x.created_date,
+                };
+                orderItems.push(orderItem);
+            })
+
+            this.orderList = orderItems;
+            console.log(this.orderList)
         },
         saveOrder() {
             this.dataTable.loading = true;
