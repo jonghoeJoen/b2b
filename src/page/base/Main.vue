@@ -202,6 +202,7 @@ export default Vue.extend({
     },
     methods: {
 		loginCheck() {
+			console.log("login check")
 			// 도매처에 url 공유한 경우 자동 로그인
 			if (Object.keys(this.$route.query).includes('shared')) {
 					this.urlShared = true;
@@ -211,7 +212,6 @@ export default Vue.extend({
 						storeId: this.$route.query.store
 						},
 					}).then((res) => {
-						console.log(res)
 						localStorage.token = res.data.token
 
 						if (isValidJwt()) {
@@ -236,7 +236,6 @@ export default Vue.extend({
 				this.userRole = data.role;
 				this.userId = data.userId;
 				this.storeId = data.storeId;
-				console.log(data)
 				store.commit('SET_USER_ROLE', this.userRole);
 				store.commit('SET_USER_ID', this.userId);
 				store.commit('SET_STORE_ID', this.storeId);
@@ -250,8 +249,11 @@ export default Vue.extend({
 			}
 		},
 		logout() {
-			localStorage.removeItem('token');
+			localStorage.clear();
 			location.reload();
+			store.commit('SET_USER_ROLE', this.userRole);
+			store.commit('SET_USER_ID', null);
+			store.commit('SET_STORE_ID', null);
 			// this.loginCheck();
 			
 		},

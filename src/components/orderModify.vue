@@ -239,7 +239,6 @@ export default Vue.component('order-modify', {
     },
     watch: {
         value(n) {
-            console.log("value", n);
             this.valueData = n;
             this.$emit('input', n);
         },
@@ -312,8 +311,6 @@ export default Vue.component('order-modify', {
             this.clean();
             this.valueData = false;
             this.$emit('update:value', false);
-
-            console.log(this.valueData, this.value)
         },
         clean() {
             for (let i = 0; i < this.order.length; i++) {

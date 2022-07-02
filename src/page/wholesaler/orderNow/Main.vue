@@ -277,7 +277,6 @@ export default{
               data: {...this.searchData, page: this.page},
             })
             this.items = response.data.data;
-            console.log(response.data.data)
             this.items.forEach((x) => { 
                 x.ids = x.grouped_id.split('~#~');
                 x.items = x.grouped_item.split('~#~');
@@ -316,7 +315,6 @@ export default{
             })
 
             this.orderList = orderItems;
-            console.log(this.orderList)
         },
         saveOrder() {
             this.dataTable.loading = true;
@@ -343,7 +341,6 @@ export default{
 
         const userId = this.$route.query.customer ? this.$route.query.customer : null;
         const storeId = this.$route.query.store ? this.$route.query.store : store.getters['GET_STORE_ID'];
-        console.log(this.$route.query)
         // 도매처에 url 공유한 경우 자동 로그인
         // if (Object.keys(this.$route.query).includes('shared')) {
         //     this.urlShared = true;

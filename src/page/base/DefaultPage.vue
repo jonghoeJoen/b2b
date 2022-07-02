@@ -3,8 +3,10 @@
     </v-card>
 </template>
 <script>
-import store from '@/store';
 import isValidJwt from '@/utils';
+import store from '@/store';
+import axios from 'axios';
+
 
 export default{
 	data(){
@@ -20,12 +22,10 @@ export default{
 			this.userRole = data.role;
 			this.userId = data.userId;
 			this.storeId = data.storeId;
-			console.log(data)
 			store.commit('SET_USER_ROLE', this.userRole);
 			store.commit('SET_USER_ID', this.userId);
 			store.commit('SET_STORE_ID', this.storeId);
 		} else {
-			// console.log(dd)
 			store.commit('SET_URL_BEFORE_LOGIN', window.location.pathname + window.location.search);
 			// 로그인페이지로 이동
 			this.$router.push({
@@ -34,7 +34,6 @@ export default{
 		}
 		if (store.getters['GET_USER_ROLE'] == 3) {
 			let returnURL = store.getters['GET_URL_BEFORE_LOGIN'];
-			console.log(returnURL);
 			store.commit('SET_URL_BEFORE_LOGIN', null);
 			if (returnURL) {
 				this.$router.push({

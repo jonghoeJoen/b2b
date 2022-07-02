@@ -60,7 +60,7 @@
                     </v-col>
                     <v-col cols="10">
                         <div v-for="(order, orderIdx) in orderList" :key="order.id">
-                            <v-card>
+                            <v-card class="mb-2">
                                 <v-card-title class="d-flex">
                                     <v-row class="mx-3">
                                         <v-col>
@@ -68,7 +68,7 @@
                                         </v-col>
                                         <v-col class="d-flex justify-end">
                                             <div>
-                                                <span style="font-size: 14px; text-align: end;" class="ma-0 pa-0">{{order.userName}}
+                                                <span style="font-size: 14px; text-align: end;" class="ma-0 pa-0">{{order.userStoreName}}
                                                 <span style="font-size: 10px; text-align: end;" class="ma-0 pa-0">{{order.userMobileNo}}</span></span>
                                             </div>
                                         </v-col>
@@ -131,34 +131,6 @@
                             </v-card>
                         </div>
                     </v-col>
-                    <!-- <v-col cols="10">
-                        <data-table-custom-component
-                            class="th-center"
-                            dense
-                            download-hide
-                            upload-hide
-                            add-hide
-                            remove-hide
-                            countHide
-                            itemsPerPageHide
-                            :headers="dataTable.headers"
-                            :items="dataTable.items"
-                            :totalRows="dataTable.totalRows"
-                            :loading="dataTable.loading"
-                            :page="dataTable.page"
-                            :search="dataTable.search"
-                            :items-per-page="dataTable.itemsPerPage"
-                            :cell="dataTable.cell"
-                            :sort-by="dataTable.sortBy"
-                            :sort-desc="dataTable.sortDesc"
-                            multi-sort
-                            @click:multiButton="clickMultiButton($event)"
-                            @tablePage="tablePage"
-                        ></data-table-custom-component>
-                    </v-col> -->
-                    <!-- <v-col cols="10" class="d-flex justify-end">
-                        <v-btn class="btn-order" @click="saveOrder()">저장</v-btn>
-                    </v-col> -->
                 </v-row>
             </v-col>
         </v-row>
@@ -170,6 +142,7 @@ import DataTableCustom from '@/components/DataTableCustom.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import moment from 'moment';
 import store from '@/store';
+import isValidJwt from '@/utils';
 
 export default{
 	data(){
@@ -256,10 +229,9 @@ export default{
             this.dataTable.loading = true;
             let response = await axios("/order/get-all-date", {
               method: "post",
-              data: {...this.searchData, page: this.page},
+              data: {...this.searchData, page: this.page, userType: 'wholesaleStore'},
             })
                 this.items = response.data.data;
-                console.log(response.data.data)
                 this.items.forEach((x) => { 
                     x.ids = x.grouped_id.split('~#~');
                     x.items = x.grouped_item.split('~#~');
@@ -293,15 +265,14 @@ export default{
                         userId: x.user_id,
                         storeId: x.store_id,
                         createdDate: x.created_date,
+                        userStoreName: x.user_store_name,
                     };
                     orderItems.push(orderItem);
                 })
 
                 this.orderList = orderItems;
-                console.log(this.orderList)
         },
         saveOrder(orderIdx) {
-            console.log(this.orderList[orderIdx])
             // this.dataTable.loading = true;
 
             let saveData = [];
@@ -321,8 +292,6 @@ export default{
                 }
                 saveData.push(temp);
             });
-
-            console.log(saveData)
 
             axios("/order/update-order-list", {
               method: "post",
@@ -353,9 +322,55 @@ export default{
             })
             .catch((error) => {
             });
-        }
+        },
+        loginCheck() {
+            // 도매처에 url 공유한 경우 자동 로그인
+            if (Object.keys(this.$route.query).includes('shared')) {
+                    this.urlShared = true;
+                    axios("/login/wholesaler-login", {
+                        method: "post",
+                        data: {
+                        storeId: this.$route.query.store
+                        },
+                    }).then((res) => {
+                        localStorage.token = res.data.token
+
+                        if (isValidJwt()) {
+                        let data = JSON.parse(atob(localStorage.token.split('.')[1]))
+                        this.username = data.username;
+                        this.userRole = data.role;
+                        this.userId = data.userId;
+                        this.storeId = data.storeId;
+                        store.commit('SET_USER_ROLE', this.userRole);
+                        store.commit('SET_USER_ID', this.userId);
+                        store.commit('SET_STORE_ID', this.storeId);
+                    }
+                    }).catch((error) => {
+                        alert("로그인 실패!");
+                        return;
+                    });
+                }
+
+            else if (isValidJwt()) {
+                let data = JSON.parse(atob(localStorage.token.split('.')[1]))
+                this.username = data.username;
+                this.userRole = data.role;
+                this.userId = data.userId;
+                this.storeId = data.storeId;
+                store.commit('SET_USER_ROLE', this.userRole);
+                store.commit('SET_USER_ID', this.userId);
+                store.commit('SET_STORE_ID', this.storeId);
+            } else {
+                store.commit('SET_URL_BEFORE_LOGIN', window.location.pathname + window.location.search);
+                // 로그인페이지로 이동
+                this.$router.push({
+                    path: '/sign-in'
+                }).catch(error => {})
+            }
+        },
 	},
 	async mounted() {
+        this.loginCheck();
         this.userId = this.$route.query.customer ? this.$route.query.customer : null;
         this.storeId = this.$route.query.store ? this.$route.query.store : store.getters['GET_STORE_ID'];
         // 도매처에 url 공유한 경우 자동 로그인
