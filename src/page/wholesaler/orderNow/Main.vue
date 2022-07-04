@@ -256,7 +256,7 @@ export default{
 		async loadOrderList() {
             // console.log({...this.searchData, page: this.page})
             // this.dataTable.loading = true;
-            // axios("/order/get-all", {
+            // axios("/api/order/get-all", {
             //   method: "post",
             //   data: {...this.searchData, page: this.page},
             // })
@@ -272,7 +272,7 @@ export default{
             // this.searchData.endTime = '';
             // this.searchData.text = '';
             this.dataTable.loading = true;
-            let response = await axios("/order/get-all-date", {
+            let response = await axios("/api/order/get-all-date", {
               method: "post",
               data: {...this.searchData, page: this.page},
             })
@@ -318,7 +318,7 @@ export default{
         },
         saveOrder() {
             this.dataTable.loading = true;
-            axios("/order/save-order-list", {
+            axios("/api/order/save-order-list", {
               method: "post",
               data: this.dataTable.items,
             })

@@ -202,7 +202,7 @@ export default{
         },
 		async submit() {
             this.dataTable.loading = true;
-            let response = await axios("/order/get-all-date", {
+            let response = await axios("/api/order/get-all-date", {
               method: "post",
               data: {...this.searchData, page: this.page, userType: 'customer'},
             })
@@ -254,7 +254,7 @@ export default{
             // 도매처에 url 공유한 경우 자동 로그인
             if (Object.keys(this.$route.query).includes('shared')) {
                     this.urlShared = true;
-                    axios("/login/wholesaler-login", {
+                    axios("/api/login/wholesaler-login", {
                         method: "post",
                         data: {
                         storeId: this.$route.query.store

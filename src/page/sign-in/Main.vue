@@ -70,7 +70,7 @@ export default Vue.extend({
     },
     methods: {
         async login() {
-            let path = "/login/login";
+            let path = "/api/login/login";
             axios.post(path, {
                 username: this.data.username,
                 password: this.data.password

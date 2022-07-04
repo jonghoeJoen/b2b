@@ -249,7 +249,7 @@ export default Vue.component('new-account', {
             this.createStore();
         },
         createStore() {
-            axios("/shop/create-store", {
+            axios("/api/shop/create-store", {
                 method: "post",
                 data: this.data,
             })
@@ -270,7 +270,7 @@ export default Vue.component('new-account', {
             });
         },
         loadCodeList() {
-            axios("/code/get-all", {
+            axios("/api/code/get-all", {
                 method: "post",
                 data: this.searchData,
             })

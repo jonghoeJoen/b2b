@@ -309,7 +309,7 @@ export default {
 		async loadStore() {
             let totalRows = 0;
             this.dataTable.loading = true;
-            axios("/shop/get-all", {
+            axios("/api/shop/get-all", {
               method: "post",
               data: {...this.searchData, page: this.page},
             })
@@ -327,7 +327,7 @@ export default {
         },
 		async createFavor(data) {
             this.dataTableFavorites.loading = true;
-            axios("/favor/create", {
+            axios("/api/favor/create", {
               method: "post",
               data: data,
             })
@@ -341,7 +341,7 @@ export default {
         },
 		async delFavor(data) {
             this.dataTableFavorites.loading = true;
-            axios("/favor/delete", {
+            axios("/api/favor/delete", {
               method: "post",
               data: data,
             })
@@ -355,7 +355,7 @@ export default {
         },
 		async loadFavor() {
             this.dataTableFavorites.loading = true;
-            axios("/favor/get-all", {
+            axios("/api/favor/get-all", {
               method: "post",
               data: {search: this.searchData, page: this.favorPage},
             })
@@ -368,7 +368,7 @@ export default {
             this.dataTableFavorites.loading = false;
 		},
         loadCodeList() {
-            axios("/code/get-all", {
+            axios("/api/code/get-all", {
                 method: "post",
                 data: this.buildingSearchData,
             })
@@ -382,7 +382,7 @@ export default {
             // 도매처에 url 공유한 경우 자동 로그인
             if (Object.keys(this.$route.query).includes('shared')) {
                     this.urlShared = true;
-                    axios("/login/wholesaler-login", {
+                    axios("/api/login/wholesaler-login", {
                         method: "post",
                         data: {
                         storeId: this.$route.query.store

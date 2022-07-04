@@ -227,7 +227,7 @@ export default Vue.extend({
             const validate = this.$refs.form.validate();
             if (validate === false) return;
             if (this.data.roleId == 2) {
-                axios("/user/customer-sign-up", {
+                axios("/api/user/customer-sign-up", {
                 method: "post",
                 data: this.data,
                 })
@@ -242,7 +242,7 @@ export default Vue.extend({
                 .catch((error) => {
                 });
             } else {
-                axios("/user/seller-sign-up", {
+                axios("/api/user/seller-sign-up", {
                 method: "post",
                 data: this.data,
                 })
