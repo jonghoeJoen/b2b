@@ -247,6 +247,7 @@ export default {
             orderDialog: {
                 accountValue: false,
                 store: null,
+                orderValue: false,
             },
             dialog: {
                 accountValue: false,

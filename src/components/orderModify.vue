@@ -231,7 +231,7 @@ export default Vue.component('order-modify', {
             store: [],
             flag: false,
             userId: null,
-            date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+            date: (new Date(Date.now() + 1 - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
             menu: false,
             modal: false,
             menu2: false,
@@ -240,10 +240,20 @@ export default Vue.component('order-modify', {
     watch: {
         value(n) {
             this.valueData = n;
-            this.$emit('input', n);
         },
         valueData(newValue) {
-            this.$emit('input', newValue);
+            console.log("valueData", newValue)
+            this.$emit('update:value', newValue);
+            this.order = [
+                { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' },
+                { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' },
+                { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' },
+                { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' },
+                { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' }
+            ];
+            // this.date = this.formatDate(new Date().getDate()+1);
+            // console.log(this.date);
+            // this.wholesaleStore = null;
         },
         // wholesaleStore(newValue) {
         //     if(newValue != null) {
@@ -316,12 +326,25 @@ export default Vue.component('order-modify', {
             for (let i = 0; i < this.order.length; i++) {
                 this.order[i] = { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' };
             }
+        },
+        padTo2Digits(num) {
+            return num.toString().padStart(2, '0');
+        },
+        formatDate(date) {
+            return [
+                date.getFullYear(),
+                this.padTo2Digits(date.getMonth() + 1),
+                this.padTo2Digits(date.getDate()),
+            ].join('-');
         }
     },
     mounted() {
         for (let i = 0; i < this.order.length; i++) {
             this.order[i].user_id = this.$store.getters['GET_USER_ID'];
         }
+
+        // console.log("tomorrow ", (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)))
+        console.log("tomorrow ", (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)))
     },
     created() {
     },

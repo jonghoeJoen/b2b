@@ -86,7 +86,7 @@
                                                     <th style="min-width: 75px;" class="text-center">
                                                         수량
                                                     </th>
-                                                    <th style="min-width: 130px;" class="text-center">
+                                                    <th style="width: 130px;" class="text-center">
                                                         가능 여부
                                                     </th>
                                                     <th style="min-width: 150px;" class="text-center">
@@ -115,6 +115,12 @@
                                     </div>
                                 </v-card-text>
                             </v-card>
+                        </div>
+                        <div class="text-center">
+                            <v-pagination
+                            v-model="page"
+                            :length="dataTable.totalRows / dataTable.itemsPerPage"
+                            ></v-pagination>
                         </div>
                     </v-col>
                 </v-row>
@@ -173,7 +179,7 @@ export default{
                     },
 				],
                 page: 1,
-                itemsPerPage: 20,
+                itemsPerPage: 10,
                 totalRows: 10,
                 loading: false,
 				items: [],
@@ -336,6 +342,11 @@ export default{
 </script>
 
 <style scoped>
+
+.v-input {
+    font-size: 1.0rem;
+}
+
 /* .table- */
 .table-container {
     width: 100%;
@@ -345,6 +356,10 @@ export default{
 table {
   width: auto;
   padding-bottom: 10px;
+}
+
+td {
+    font-size: 14px !important; 
 }
 
 .sign-up-title {

@@ -8,10 +8,15 @@ html, body {
     font-family: 'Noto Sans KR', sans-serif;
   }
 
-.test {
+/* .test {
     color: blue !important;
     background-color: blue !important;
+} */
+
+.v-input {
+    font-size: 12px;
 }
+
 .sign-up-title {
     font-style: normal;
     font-weight: 700;
