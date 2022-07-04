@@ -53,64 +53,66 @@
                             </v-col>
                         </v-row>
                     </v-col>
-                    <v-col cols="10">
+                    <v-col cols="12" md="10">
                         <div v-for="order in orderList" :key="order.id">
                             <v-card class="mb-2">
                                 <v-card-title class="d-flex">
-                                    <v-row class="mx-3">
-                                        <v-col>
+                                    <v-row>
+                                        <v-col cols="12" md="6">
                                             <span>{{order.pickupDate}}</span>
                                         </v-col>
-                                        <v-col class="d-flex justify-end">
+                                        <v-col cols="12" md="6" class="d-flex justify-end align-center">
                                             <span class="mr-3" style="font-size: 14px; text-align: end;">{{order.storeName}}</span>
-                                            <v-btn small @click="copyUrl(order.storeId)">공유 URL 복사</v-btn>
+                                            <v-btn x-small @click="copyUrl(order.storeId)">공유 URL 복사</v-btn>
                                         </v-col>
                                     </v-row>
                                     
                                 </v-card-title>
                                 <v-card-text>
-                                    <v-simple-table dense>
-                                        <template v-slot:default>
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 20%;" class="text-center">
-                                                    상품명
-                                                </th>
-                                                <th style="width: 15%;" class="text-center">
-                                                    색상
-                                                </th>
-                                                <th style="width: 10%;" class="text-center">
-                                                    사이즈
-                                                </th>
-                                                <th style="width: 10%;" class="text-center">
-                                                    수량
-                                                </th>
-                                                <th style="width: 20%;" class="text-center">
-                                                    가능 여부
-                                                </th>
-                                                <th style="width: 25%;" class="text-center">
-                                                    메모
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr
-                                            v-for="(item, index) in order.order"
-                                            :key="index"
-                                            >
-                                                <td class="text-center">{{ item.item }}</td>
-                                                <td class="text-center">{{ item.color }}</td>
-                                                <td class="text-center">{{ item.size }}</td>
-                                                <td class="text-center">{{ item.quantity }}</td>
-                                                <td v-if="item.status === 'T'" class="text-center">가능</td>
-                                                <td v-else-if="item.status === 'P'" class="text-center">부분가능</td>
-                                                <td v-else-if="item.status === 'A'" class="text-center">추후가능</td>
-                                                <td v-else-if="item.status === 'X'" class="text-center">품절</td>
-                                                <td class="text-center">{{ item.comment }}</td>
-                                            </tr>
-                                        </tbody>
-                                        </template>
-                                    </v-simple-table>
+                                    <div class="table-container">
+                                        <v-simple-table dense>
+                                            <template v-slot:default>
+                                            <thead>
+                                                <tr>
+                                                    <th style="min-width: 150px;" class="text-center">
+                                                        상품명
+                                                    </th>
+                                                    <th style="min-width: 80px;" class="text-center">
+                                                        색상
+                                                    </th>
+                                                    <th style="min-width: 75px;" class="text-center">
+                                                        사이즈
+                                                    </th>
+                                                    <th style="min-width: 75px;" class="text-center">
+                                                        수량
+                                                    </th>
+                                                    <th style="min-width: 130px;" class="text-center">
+                                                        가능 여부
+                                                    </th>
+                                                    <th style="min-width: 150px;" class="text-center">
+                                                        메모
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                v-for="(item, index) in order.order"
+                                                :key="index"
+                                                >
+                                                    <td class="text-center">{{ item.item }}</td>
+                                                    <td class="text-center">{{ item.color }}</td>
+                                                    <td class="text-center">{{ item.size }}</td>
+                                                    <td class="text-center">{{ item.quantity }}</td>
+                                                    <td v-if="item.status === 'T'" class="text-center">가능</td>
+                                                    <td v-else-if="item.status === 'P'" class="text-center">부분가능</td>
+                                                    <td v-else-if="item.status === 'A'" class="text-center">추후가능</td>
+                                                    <td v-else-if="item.status === 'X'" class="text-center">품절</td>
+                                                    <td class="text-center">{{ item.comment }}</td>
+                                                </tr>
+                                            </tbody>
+                                            </template>
+                                        </v-simple-table>
+                                    </div>
                                 </v-card-text>
                             </v-card>
                         </div>
@@ -333,7 +335,18 @@ export default{
 }
 </script>
 
-<style>
+<style scoped>
+/* .table- */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+table {
+  width: auto;
+  padding-bottom: 10px;
+}
+
 .sign-up-title {
     font-family: 'Inter';
     font-style: normal;
