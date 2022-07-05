@@ -181,6 +181,11 @@ export default Vue.extend({
 			admins: [
 				{
 					icon: 'mdi-format-list-bulleted',
+					text: '판매처 리스트',
+					href: '/admin-customer'
+				},
+				{
+					icon: 'mdi-format-list-bulleted',
 					text: '도매처 리스트',
 					href: 'admin-wholesaler'
 				},
@@ -202,7 +207,6 @@ export default Vue.extend({
     },
     methods: {
 		loginCheck() {
-			console.log("login check")
 			// 도매처에 url 공유한 경우 자동 로그인
 			if (Object.keys(this.$route.query).includes('shared')) {
 					this.urlShared = true;
@@ -240,7 +244,6 @@ export default Vue.extend({
 				store.commit('SET_USER_ID', this.userId);
 				store.commit('SET_STORE_ID', this.storeId);
 			} else {
-				// console.log(dd)
 				store.commit('SET_URL_BEFORE_LOGIN', window.location.pathname + window.location.search);
 				// 로그인페이지로 이동
 				this.$router.push({

@@ -59,72 +59,73 @@
                         </v-row>
                     </v-col>
                     <v-col cols="12" md="10">
-                        <div v-for="(order, orderIdx) in orderList" :key="order.id">
+                        <div v-for="pickupDate in Object.keys(cardList)" :key="pickupDate">
                             <v-card class="mb-2">
                                 <v-card-title class="d-flex">
                                     <v-row>
-                                        <v-col cols="12" md="6">
-                                            <span>{{order.pickupDate}}</span>
-                                        </v-col>
-                                        <v-col  cols="12" md="6" class="d-flex justify-end">
-                                            <div>
-                                                <span style="font-size: 14px; text-align: end;" class="ma-0 pa-0">{{order.userStoreName}}
-                                                <span style="font-size: 10px; text-align: end;" class="ma-0 pa-0">{{order.userMobileNo}}</span></span>
-                                            </div>
+                                        <v-col cols="12">
+                                            <span>{{pickupDate}}</span>
                                         </v-col>
                                     </v-row>
-                                    
                                 </v-card-title>
                                 <v-card-text>
-                                    <div class="table-container">
-                                        <v-simple-table dense>
-                                            <template v-slot:default>
-                                            <thead>
-                                                <tr>
-                                                    <th style="min-width: 150px;" class="text-center">
-                                                        상품명
-                                                    </th>
-                                                    <th style="min-width: 80px;" class="text-center">
-                                                        색상
-                                                    </th>
-                                                    <th style="min-width: 75px;" class="text-center">
-                                                        사이즈
-                                                    </th>
-                                                    <th style="min-width: 75px;" class="text-center">
-                                                        수량
-                                                    </th>
-                                                    <th style="width: 130px; min-width: 130px;" class="text-center">
-                                                        가능 여부
-                                                    </th>
-                                                    <th style="min-width: 150px;" class="text-center">
-                                                        메모
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr
-                                                v-for="(item, index) in order.order"
-                                                :key="index"
-                                                >
-                                                    <td class="text-center">{{ item.item }}</td>
-                                                    <td class="text-center">{{ item.color }}</td>
-                                                    <td class="text-center">{{ item.size }}</td>
-                                                    <td class="text-center">{{ item.quantity }}</td>
-                                                    <td class="text-center">
-                                                        <v-select 
-                                                            dense
-                                                            :items="status"
-                                                            item-text="text"
-                                                            item-value="value"
-                                                            v-model="item.status"
-                                                            hide-details
-                                                        ></v-select>
-                                                    </td>
-                                                    <td class="text-center"><v-text-field v-model="item.comment"></v-text-field></td>
-                                                </tr>
-                                            </tbody>
-                                            </template>
-                                        </v-simple-table>
+                                    <div v-for="(orderList, orderIdx) in cardList[pickupDate]" :key="orderIdx">
+                                        <v-col cols="12" class="d-flex justify-end">
+                                            <div>
+                                                <span style="font-size: 14px; text-align: end;" class="ma-0 pa-0">{{orderList.userStoreName}}
+                                                <span style="font-size: 10px; text-align: end;" class="ma-0 pa-0">{{orderList.userMobileNo}}</span></span>
+                                            </div>
+                                        </v-col>
+                                        <div class="table-container">
+                                            <v-simple-table dense>
+                                                <template v-slot:default>
+                                                <thead>
+                                                    <tr>
+                                                        <th style="min-width: 150px;" class="text-center">
+                                                            상품명
+                                                        </th>
+                                                        <th style="min-width: 80px;" class="text-center">
+                                                            색상
+                                                        </th>
+                                                        <th style="min-width: 75px;" class="text-center">
+                                                            사이즈
+                                                        </th>
+                                                        <th style="min-width: 75px;" class="text-center">
+                                                            수량
+                                                        </th>
+                                                        <th style="width: 130px; min-width: 130px;" class="text-center">
+                                                            가능 여부
+                                                        </th>
+                                                        <th style="min-width: 150px;" class="text-center">
+                                                            메모
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr
+                                                    v-for="(item, index) in orderList.order"
+                                                    :key="index"
+                                                    >
+                                                        <td class="text-center">{{ item.item }}</td>
+                                                        <td class="text-center">{{ item.color }}</td>
+                                                        <td class="text-center">{{ item.size }}</td>
+                                                        <td class="text-center">{{ item.quantity }}</td>
+                                                        <td class="text-center">
+                                                            <v-select 
+                                                                dense
+                                                                :items="status"
+                                                                item-text="text"
+                                                                item-value="value"
+                                                                v-model="item.status"
+                                                                hide-details
+                                                            ></v-select>
+                                                        </td>
+                                                        <td class="text-center"><v-text-field v-model="item.comment"></v-text-field></td>
+                                                    </tr>
+                                                </tbody>
+                                                </template>
+                                            </v-simple-table>
+                                        </div>
                                     </div>
                                     <v-col cols="12" class="d-flex justify-end">
                                         <v-btn small class="btn-order" @click="saveOrder(orderIdx)">저장</v-btn>
@@ -227,6 +228,8 @@ export default{
                 {text: '추후 가능', value: 'A'},
                 {text: '품절', value: 'X'}
             ],
+            cardList: [],
+            
 		};
 	},
 	methods: {
@@ -250,7 +253,7 @@ export default{
                     x.comments = x.grouped_comment? x.grouped_comment.split('~#~') : [];
                 });
 
-                let orderItems = [];
+                let orderObject = {};
                 this.items.forEach(x => { 
                     let orderItem = {};
                     let itemInfo = [];
@@ -275,10 +278,11 @@ export default{
                         createdDate: x.created_date,
                         userStoreName: x.user_store_name,
                     };
-                    orderItems.push(orderItem);
+                    if (Object.prototype.hasOwnProperty.call(orderObject, orderItem.pickupDate) === false) 
+                        orderObject[orderItem.pickupDate] = [];
+                    orderObject[orderItem.pickupDate].push(orderItem);
                 })
-
-                this.orderList = orderItems;
+                this.cardList = orderObject;
         },
         saveOrder(orderIdx) {
             // this.dataTable.loading = true;

@@ -242,7 +242,6 @@ export default Vue.component('order-modify', {
             this.valueData = n;
         },
         valueData(newValue) {
-            console.log("valueData", newValue)
             this.$emit('update:value', newValue);
             this.order = [
                 { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' },
@@ -251,19 +250,7 @@ export default Vue.component('order-modify', {
                 { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' },
                 { item: '', store_id: '', color: '', size: '', quantity: null, comment: '' }
             ];
-            // this.date = this.formatDate(new Date().getDate()+1);
-            // console.log(this.date);
-            // this.wholesaleStore = null;
         },
-        // wholesaleStore(newValue) {
-        //     if(newValue != null) {
-        //         console.log(newValue)
-        //         // this.loadStore(newValue);
-        //         for (let i = 0; i < this.order.length; i++) {
-        //             this.order[i].store_id = newValue;
-        //         }
-        //     }
-        // }
     },
     methods: {
         async modalCheck() {
@@ -342,9 +329,6 @@ export default Vue.component('order-modify', {
         for (let i = 0; i < this.order.length; i++) {
             this.order[i].user_id = this.$store.getters['GET_USER_ID'];
         }
-
-        // console.log("tomorrow ", (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)))
-        console.log("tomorrow ", (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)))
     },
     created() {
     },

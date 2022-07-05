@@ -254,23 +254,6 @@ export default{
             this.page = page;
         },
 		async loadOrderList() {
-            // console.log({...this.searchData, page: this.page})
-            // this.dataTable.loading = true;
-            // axios("/api/order/get-all", {
-            //   method: "post",
-            //   data: {...this.searchData, page: this.page},
-            // })
-            // .then((response) => {
-            //     this.item = response.data.data;
-            //     this.dataTable.items = this.item;
-            //     this.dataTable.totalRows = response.data.total_rows;
-            // })
-            // .catch((error) => {
-            // });
-            // this.dataTable.loading = false;
-            // this.searchData.startTime = '';
-            // this.searchData.endTime = '';
-            // this.searchData.text = '';
             this.dataTable.loading = true;
             let response = await axios("/api/order/get-all-date", {
               method: "post",
@@ -341,32 +324,6 @@ export default{
 
         const userId = this.$route.query.customer ? this.$route.query.customer : null;
         const storeId = this.$route.query.store ? this.$route.query.store : store.getters['GET_STORE_ID'];
-        // 도매처에 url 공유한 경우 자동 로그인
-        // if (Object.keys(this.$route.query).includes('shared')) {
-        //     this.urlShared = true;
-        //     axios.post("/login/wholesaler-login", {
-        //         storeId: storeId
-        //     }).then((res) => {
-        //         console.log(res)
-        //         localStorage.token = res.data.token
-
-        //         if (isValidJwt()) {
-        //         console.log("valid valid valid")
-		// 		let data = JSON.parse(atob(localStorage.token.split('.')[1]))
-		// 		this.username = data.username;
-		// 		this.userRole = data.role;
-		// 		this.userId = data.userId;
-		// 		this.storeId = data.storeId;
-		// 		store.commit('SET_USER_ROLE', this.userRole);
-		// 		store.commit('SET_USER_ID', this.userId);
-		// 		store.commit('SET_STORE_ID', this.storeId);
-		// 	}
-        //     }).catch((error) => {
-        //         console.log(error)
-        //         alert("로그인 실패!");
-        //         return;
-        //     });
-        // }
 
         this.searchData.userId = userId;
         this.searchData.storeId = storeId;

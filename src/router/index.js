@@ -41,8 +41,11 @@ const routes = [
                 path:'/admin-orderHistory',
                 component: () => import('../page/admin/orderHistory/Main.vue'),
             },
+            {
+                path:'/admin-customer',
+                component: () => import('../page/admin/customer/Main.vue'),
+            },
         ]
-        
     },
     {
         path: "/base",

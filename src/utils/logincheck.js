@@ -3,7 +3,6 @@ import Vue from 'vue'
 export const EventBus = new Vue()
 
 export function loginCheck() {
-    console.log("로그인 체크 중")
     // 도매처에 url 공유한 경우 자동 로그인
     if (Object.keys(this.$route.query).includes('shared')) {
             this.urlShared = true;
@@ -41,7 +40,6 @@ export function loginCheck() {
         store.commit('SET_USER_ID', this.userId);
         store.commit('SET_STORE_ID', this.storeId);
     } else {
-        // console.log(dd)
         store.commit('SET_URL_BEFORE_LOGIN', window.location.pathname + window.location.search);
         // 로그인페이지로 이동
         this.$router.push({

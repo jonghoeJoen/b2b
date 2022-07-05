@@ -45,7 +45,7 @@
                                             ></v-text-field>
                                             <v-btn
                                                 class="pa-0 btn-black"
-                                                @click="submit()"
+                                                @click="loadOrderHistory()"
                                             >검색</v-btn>
                                         </div>
                                     </v-col>
@@ -54,64 +54,66 @@
                         </v-row>
                     </v-col>
                     <v-col cols="12" md="10">
-                        <div v-for="order in orderList" :key="order.id">
+                        <div v-for="pickupDate in Object.keys(cardList)" :key="pickupDate">
                             <v-card class="mb-2">
                                 <v-card-title class="d-flex">
                                     <v-row>
                                         <v-col cols="12" md="6">
-                                            <span>{{order.pickupDate}}</span>
-                                        </v-col>
-                                        <v-col cols="12" md="6" class="d-flex justify-end align-center">
-                                            <span class="mr-3" style="font-size: 14px; text-align: end;">{{order.storeName}}</span>
-                                            <v-btn x-small @click="copyUrl(order.storeId)">공유 URL 복사</v-btn>
+                                            <span>{{pickupDate}}</span>
                                         </v-col>
                                     </v-row>
-                                    
                                 </v-card-title>
                                 <v-card-text>
-                                    <div class="table-container">
-                                        <v-simple-table dense>
-                                            <template v-slot:default>
-                                            <thead>
-                                                <tr>
-                                                    <th style="min-width: 150px;" class="text-center">
-                                                        상품명
-                                                    </th>
-                                                    <th style="min-width: 80px;" class="text-center">
-                                                        색상
-                                                    </th>
-                                                    <th style="min-width: 75px;" class="text-center">
-                                                        사이즈
-                                                    </th>
-                                                    <th style="min-width: 75px;" class="text-center">
-                                                        수량
-                                                    </th>
-                                                    <th style="width: 130px;" class="text-center">
-                                                        가능 여부
-                                                    </th>
-                                                    <th style="min-width: 150px;" class="text-center">
-                                                        메모
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr
-                                                v-for="(item, index) in order.order"
-                                                :key="index"
-                                                >
-                                                    <td class="text-center">{{ item.item }}</td>
-                                                    <td class="text-center">{{ item.color }}</td>
-                                                    <td class="text-center">{{ item.size }}</td>
-                                                    <td class="text-center">{{ item.quantity }}</td>
-                                                    <td v-if="item.status === 'T'" class="text-center">가능</td>
-                                                    <td v-else-if="item.status === 'P'" class="text-center">부분가능</td>
-                                                    <td v-else-if="item.status === 'A'" class="text-center">추후가능</td>
-                                                    <td v-else-if="item.status === 'X'" class="text-center">품절</td>
-                                                    <td class="text-center">{{ item.comment }}</td>
-                                                </tr>
-                                            </tbody>
-                                            </template>
-                                        </v-simple-table>
+                                    <div v-for="(orderList, orderIdx) in cardList[pickupDate]" :key="orderIdx">
+                                        <v-col cols="12" class="d-flex justify-end">
+                                            <span class="mr-3" style="font-size: 14px; text-align: end;">{{orderList.storeName}}</span>
+                                            <v-btn x-small @click="copyUrl(orderList.storeId)">공유 URL 복사</v-btn>
+                                        </v-col>
+                                        <div class="table-container">
+                                            <v-simple-table dense>
+                                                <template v-slot:default>
+                                                <thead>
+                                                    <tr>
+                                                        <th style="min-width: 150px;" class="text-center">
+                                                            상품명
+                                                        </th>
+                                                        <th style="min-width: 80px;" class="text-center">
+                                                            색상
+                                                        </th>
+                                                        <th style="min-width: 75px;" class="text-center">
+                                                            사이즈
+                                                        </th>
+                                                        <th style="min-width: 75px;" class="text-center">
+                                                            수량
+                                                        </th>
+                                                        <th style="width: 130px;" class="text-center">
+                                                            가능 여부
+                                                        </th>
+                                                        <th style="min-width: 150px;" class="text-center">
+                                                            메모
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr
+                                                    v-for="(item, index) in orderList.order"
+                                                    :key="index"
+                                                    >
+                                                        <td class="text-center">{{ item.item }}</td>
+                                                        <td class="text-center">{{ item.color }}</td>
+                                                        <td class="text-center">{{ item.size }}</td>
+                                                        <td class="text-center">{{ item.quantity }}</td>
+                                                        <td v-if="item.status === 'T'" class="text-center">가능</td>
+                                                        <td v-else-if="item.status === 'P'" class="text-center">부분가능</td>
+                                                        <td v-else-if="item.status === 'A'" class="text-center">추후가능</td>
+                                                        <td v-else-if="item.status === 'X'" class="text-center">품절</td>
+                                                        <td v-else class="text-center"> </td>
+                                                        <td class="text-center">{{ item.comment ? item.comment : "" }}</td>
+                                                    </tr>
+                                                </tbody>
+                                                </template>
+                                            </v-simple-table>
+                                        </div>
                                     </div>
                                 </v-card-text>
                             </v-card>
@@ -197,6 +199,7 @@ export default{
             orderList: [],
             userId: null,
             storeId: null,
+            cardList: [],
 		};
 	},
 	methods: {
@@ -208,7 +211,7 @@ export default{
                 alert('복사 실패');
             })
         },
-		async submit() {
+		async loadOrderHistory() {
             this.dataTable.loading = true;
             let response = await axios("/api/order/get-all-date", {
               method: "post",
@@ -225,7 +228,7 @@ export default{
                     x.comments = x.grouped_comment? x.grouped_comment.split('~#~') : [];
                 });
 
-                let orderItems = [];
+                let orderObject = {};
                 this.items.forEach(x => { 
                     let orderItem = {};
                     let itemInfo = [];
@@ -250,10 +253,11 @@ export default{
                         storeName: x.store_name,
                         createdDate: x.created_date,
                     };
-                    orderItems.push(orderItem);
+                    if (Object.prototype.hasOwnProperty.call(orderObject, orderItem.pickupDate) === false) 
+                        orderObject[orderItem.pickupDate] = [];
+                    orderObject[orderItem.pickupDate].push(orderItem);
                 })
-
-                this.orderList = orderItems;
+                this.cardList = orderObject;
         },
         tablePage(page) {
             this.page = page;
@@ -307,7 +311,7 @@ export default{
 	mounted() {
         this.loginCheck();
         this.searchData.userId = this.$store.getters['GET_USER_ID'];
-        this.submit();
+        this.loadOrderHistory();
 	},
     created() {
     },
@@ -333,7 +337,7 @@ export default{
         },
         "page": {
             handler(n) {
-                this.submit();
+                this.loadOrderHistory();
             },
             deep: true
         }

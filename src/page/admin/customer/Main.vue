@@ -6,7 +6,7 @@
                     <v-col cols="10" class="d-flex justify-space-between">
                         <v-row dense class="d-flex justify-center align-center">
                             <v-col cols="12" md="4" sm="12" class="d-flex justify-start align-center">
-                                <div class="sign-up-subtitle">도매처 리스트</div>
+                                <div class="sign-up-subtitle">판매처 리스트</div>
                             </v-col>
                             <v-col cols="12" md="8" sm="12" class="d-flex justify-end align-center pl-2">
                                 <div class="d-flex jusitfy-center align-center" style="width:100%">
@@ -19,7 +19,7 @@
                                     ></v-text-field>
                                     <v-btn
                                         class="pa-0 btn-black"
-                                        @click="loadStore()"
+                                        @click="loadRetails()"
                                     >검색</v-btn>
                                 </div>
                             </v-col>
@@ -50,30 +50,12 @@
                         >
                         </data-table-custom-component>
                     </v-col>
-                    <v-col cols="10">
-                        <div style="width:100%; display:flex; justify-content: end;">
-                            <v-btn 
-                                @click="dialogChange()">
-                                <v-icon
-                                    small
-                                    dark
-                                >
-                                    mdi-plus-circle-outline
-                                </v-icon>
-                                새 거래처 등록
-                            </v-btn>
-                        </div>
-                    </v-col>
                 </v-row>
             </v-col>
         </v-row>
         <new-account
             :value.sync="dialog.accountValue"
         ></new-account>
-        <!-- <order-modify
-            :value.sync="dialog.orderValue"
-            :requestId.sync="dialog.requestId"
-        ></order-modify> -->
         <check-order
             :value.sync="dialog.orderValue"
             :requestId.sync="dialog.requestId"
@@ -85,7 +67,6 @@
 import Vue from 'vue';
 import axios from 'axios';
 import newAccount from '../../../components/newAccount.vue';
-// import OrderModify from '../../../components/orderModify.vue';
 import CheckOrder from '../../../components/checkOrder.vue';
 import DataTableCustom from '@/components/DataTableCustom.vue';
 import isValidJwt from '@/utils';
@@ -103,19 +84,19 @@ export default {
             dataTable: {
 				headers : [
                     {
-                        text: '건물명', value: 'building_num', align: 'center', cellClass: 'minw-10 text-center',
+                        text: '업체명', value: 'store_name', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '매장명', value: 'store_name', align: 'center', cellClass: 'minw-10 text-center',
+                        text: '아이디', value: 'username', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '주소', value: 'store_location', align: 'center', cellClass: 'minw-10 text-center',
+                        text: '주소', value: 'address', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '매장 휴대전화', value: 'phone_no', align: 'center', cellClass: 'minw-10 text-center',
+                        text: '전화번호', value: 'mobile_no', align: 'center', cellClass: 'minw-10 text-center',
                     },
                     {
-                        text: '매장 유선번호', value: 'mobile_no', align: 'center', cellClass: 'minw-10 text-center',
+                        text: '주문 내역', value: 'orderHistory', align: 'center', cellClass: 'minw-10 text-center', type: 'multiButton',
                     },
 				],
 				items: [],
@@ -125,7 +106,7 @@ export default {
                 totalRows: 10,
                 cell: {
                     multiButton: {
-                        order: {
+                        orderHistory: {
                             buttonList: [
                                 {
                                     color: 'view',
@@ -152,6 +133,7 @@ export default {
                 text: '',
                 storeId: '',
                 buildingNum: '',
+                retailName: '',
             },
 		};
 	},
@@ -163,8 +145,8 @@ export default {
             this.dialog.accountValue = true;
         },
         clickMultiButton(data) {
-            if(data.header == 'order') {
-                this.dialog.requestId = data.item.id;
+            if(data.header == 'orderHistory') {
+                this.dialog.requestId = data.item.user_id;
                 this.dialog.orderValue = true; 
             } else if (data.header == 'favorAdd') {
                 for(let i = 0; i < this.dataTableFavorites.items.length; i++) {
@@ -180,19 +162,15 @@ export default {
                 this.delFavor(userData);
             }
         },
-		async loadStore() {
+		async loadRetails() {
             this.dataTable.loading = true;
-            axios("/api/shop/get-all", {
+            let response = await axios("/api/user/get-retail-stores", {
               method: "post",
               data: {...this.searchData, page: this.page},
-            })
-            .then((response) => {
-                this.item = response.data.data;
-                this.dataTable.items = this.item;
-                this.dataTable.totalRows = response.data.total_pages;
-            })
-            .catch((error) => {
             });
+            this.item = response.data.data;
+            this.dataTable.items = this.item;
+            this.dataTable.totalRows = response.data.total_rows;
             this.dataTable.loading = false;
             this.searchData.startTime = '';
             this.searchData.endTime = '';
@@ -249,19 +227,12 @@ export default {
 
         this.searchData.userId = this.$store.getters['GET_USER_ID'];
         // this.searchData.storeId = store.getters['GET_STORE_ID'];
-        this.loadStore();
+        this.loadRetails();
     },
     watch: {
-        // "item": {
-        //     handler(n) {
-        //         this.dataTable.totalRows = n.length
-        //         this.dataTable.items = n;
-        //     },
-        //     deep: true
-        // },
         "page": {
             handler(n) {
-                this.loadStore();
+                this.loadRetails();
             },
             deep: true
         }
