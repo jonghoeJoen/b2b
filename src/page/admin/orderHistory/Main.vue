@@ -51,6 +51,12 @@
                                             >검색</v-btn>
                                         </div>
                                     </v-col>
+                                    <v-col cols="12" class="d-flex justify-end align-center pl-2">
+                                            <v-btn
+                                                class="btn-black"
+                                                @click="downloadExcel()"
+                                            >엑셀 다운로드</v-btn>
+                                    </v-col>
                                 </v-row>
                             </v-col>   
                         </v-row>
@@ -213,6 +219,7 @@ export default{
                 endTime: '',
                 text: '',
                 storeId: '',
+                userType: '',
             },
             page: 1,
             urlShared: false,
@@ -334,6 +341,12 @@ export default{
                 this.customerInfo = response.data;
             })
             .catch((error) => {
+            });
+        },
+        async downloadExcel() {
+            await axios("/api/excel/admin-order-history", {
+              method: "post",
+              data: this.searchData,
             });
         },
         loginCheck() {
